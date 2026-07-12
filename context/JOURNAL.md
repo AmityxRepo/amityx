@@ -25,3 +25,7 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 20:40 · c2 · orchestrator · blocker · cycle-3 · blocked — founder "go" + P.7 answers (age band, first-10 list, pricing)
 
 ## Cycle 2 — closed 2026-07-11: pivot v0.2 applied (spec+context+backlog); no code per user instruction; cycle 3 = V1 build on founder go
+
+## Cycle 2 addendum
+2026-07-11 21:10 · c2 · user · plan · GTM · in-progress — founder raises adoption-friction objection; proposes ClassDojo-style penetration
+2026-07-11 21:20 · c2 · orchestrator · design · spec P.8 · done — PROPOSED GTM: free layer (booking page + parent broadcast/photos + kiosk check-in, zero during-class process), owner stays payer; awaiting ratification → docs/PRODUCT_SPEC.md §P.8

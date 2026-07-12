@@ -25,8 +25,8 @@ none
 6. ☐ Guards: no payments, no AI, no stores
 
 ## Pending decisions / questions for the user
-ICP age band (0–5 vs 0–12) · first-10-hubs list · entry pricing (rec: free concierge pilot →
-$49–79/mo) · "go" for cycle-3 build.
+Ratify spec §P.8 (proposed Dojo-adapted GTM — changes V1 scope) · ICP age band (0–5 vs 0–12) ·
+first-10-hubs list · entry pricing (rec: free layer forever + paid ops tier) · "go" for cycle-3 build.
 
 ## Cost ledger
 - c1: fable-5 inline · spawns: 0 · 4 web searches

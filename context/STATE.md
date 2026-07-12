@@ -19,6 +19,7 @@ Stall count: 0
 Nothing in flight.
 
 ## Next
+- Founder ratifies/amends spec §P.8 (proposed GTM: free booking-page + parent-delight layer, Dojo-adapted) → on yes: v0.3, D-008, OBJECTIVE + T-005/T-007 re-scope, draft T-010/T-011
 - Founder answers P.7 open questions: ICP age band (0–5 vs 0–12) · first-10-hubs list · entry pricing posture
 - Cycle 3: V1 build kickoff (planner refines drafted backlog)
 - Pre-build founder checks (no code): Vercel Hobby commercial-use terms · Supabase free-tier limits · Workspace SMTP app password for Supabase custom SMTP

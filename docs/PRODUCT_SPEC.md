@@ -144,6 +144,80 @@ undercutting the $79–139 floor); does "Amityx" brand serve B2B hub owners? (na
 **Next decisions:** Founder confirms ICP age band + first-10 list → kick off cycle 3 (V1 build:
 T-003..T-009 backlog is drafted in `context/tasks/`).
 
+### P.8 Penetration strategy — the ClassDojo question (PROPOSED, 2026-07-11 — pending founder ratification; not yet reflected in OBJECTIVE/tasks)
+
+**The objection this answers:** hub owners won't adopt software that adds process *during* class —
+staff hands are full (wet pool decks, paint, ten toddlers). Any strategy that starts with "your
+staff will log attendance in our app" loses at hello. Founder proposal: study how ClassDojo
+penetrated education.
+
+**What ClassDojo actually did [K]:**
+1. Targeted the *practitioner* (teacher), never the institution buyer — no sales force.
+2. Free forever for that practitioner; monetized the *parents* years later (Plus, tutoring).
+3. Instant single-player value in minutes, aimed at the teacher's OWN daily pain — it removed
+   work (parent comms, behavior tracking) rather than adding process.
+4. Parents pulled in by the teacher (photos, reports about *their* kid) — emotional gravity.
+5. Spread teacher→teacher inside dense buildings (40 teachers per school), then school→school.
+6. Product felt delightful and personal, not enterprise.
+
+**What transfers vs. what doesn't (the challenge):**
+| Dojo element | Transfers to toddler hubs? |
+|---|---|
+| Bottom-up, free entry, no forced process | **Yes — adopt.** The free layer must remove work, not add it. |
+| Parent emotional pull (photos of MY kid) | **Yes, amplified** — toddler parents are insatiable for photos; brightwheel's daily photo report proved it in daycare **[K]**. |
+| Practitioner density drives spread | **No.** A school has 40 teachers in one building; hubs are isolated SMBs. Replace with: parent cross-hub pressure ("karate sends photos — why doesn't ballet?") + owner Facebook groups (where Dee buys software, §4.8). |
+| 30 contact-hours/week emotional density | **No.** A hub sees a kid 1hr/week; per-parent engagement is thinner. Free layer must be near-zero marginal effort for the hub. |
+| Decade of VC-funded free before monetizing | **No.** We need paid conviction by day ~120 (P.6). Free tier must have ~zero COGS (it does, on our infra — except photo storage, see below) and a short, natural upsell. |
+| Monetize parents, never the practitioner | **Partially.** Keep the OWNER as the payer (v0.2 economics); parents stay free. Dojo-style parent subscriptions are a Phase-3+ option, not the plan. |
+
+**One sharpening Dojo doesn't give us:** the owner's #1 pain isn't ops — it's *filling classes*.
+Delight (photos) wins parents; **revenue wins owners**. So the free hook should attack both:
+
+**The adapted playbook — "Dojo motion, brightwheel emotion, Sawyer economics":**
+- **Free forever layer (the hook), zero during-class process:**
+  (a) *public class/booking page* — beautiful listing + booking-request/waitlist capture (fills
+  classes = makes the owner money; roster auto-builds from requests, killing setup work);
+  (b) *parent broadcast + photo moments* — one optional in-class action (snap a photo, something
+  staff already do for Instagram), announcements/reminders otherwise written outside class hours;
+  (c) *parent kiosk self check-in* (tablet at the door) — parents do the labor, not staff;
+  (d) parents need **no app install**: email/SMS web links (PWA advantage).
+- **Paid layer (the business, upsell after habit):** ops suite — scheduling, attendance analytics,
+  enrollment/registration forms, CRM-grade reporting, (V2) payments. Sold by in-product moments:
+  "23 families viewed this week's photos — let them self-register for fall."
+- **"Powered by Amityx" on every parent-facing artifact** — every booking page, photo email, and
+  reminder is an ad to parents who know other hub owners (Dojo's silent loop).
+- **Concierge onboarding stays** (our CRM engine): we build the hub's page and import their roster
+  ourselves — adoption cost ≈ one phone call. This is the anti-iClassPro move (their $300–800
+  migration fees, R-002).
+- **Photo storage is the honest COGS crack AND the upgrade trigger:** Supabase free tier = 1GB.
+  Free tier keeps a rolling 30-day photo window (compressed); the permanent archive/keepsake is
+  paid — which converts via the parents' own loss-aversion, pushing the owner to upgrade.
+
+**What ratifying this changes (would become v0.3 + D-008):**
+1. V1 scope: ADD free booking page + parent broadcast/photo moments + kiosk check-in; SIMPLIFY
+   staff attendance (optional, one-tap, kiosk-first). Parent *view* arrives in V1 as link-based
+   read-only — which pulls per-child photo-consent flags and guardian-scoped access forward from
+   Phase 3 into V1 (privacy design, counsel check on photo consent language).
+2. OBJECTIVE criteria: activation metric shifts from staff attendance-logging to *parents
+   connected per hub* + *booking requests per hub*; P.6 willingness-to-pay criterion stays.
+3. Tasks: T-007 re-scoped (kiosk + simplified attendance), new T-010 (booking page), T-011
+   (broadcast/photos + consent model); T-005 schema adds consent + booking tables.
+**Risks of this path (stated while calm):** free-forever is nearly impossible to walk back
+(TeamSnap's ad resentment shows the failure mode); paid conversion gets *slower* than
+pilot-then-pay — the P.6 day-120 gate must survive ratification, or we drift into Dojo's
+decade-long free runway without Dojo's VC; photo features move child-media privacy from Phase 3
+to V1 (consent UX + storage security are no longer deferrable); and a booking page without
+payments is a lead-capture tool, not registration — set owner expectations honestly.
+
+**Key insights:** The Dojo lesson isn't "free for teachers" — it's *enter through the person whose
+problem you remove, and let the child's gravity pull everyone else in*. For hubs, the removable
+problem is empty classes and parent-comms drudgery, not attendance.
+**Risks:** monetization delay; early privacy surface; free-tier storage COGS.
+**Open questions:** free-tier photo window (30 vs 90 days); kiosk hardware assumption (hub's own
+tablet?); does the booking page launch before or with the parent broadcast?
+**Next decisions:** Founder ratifies/amends P.8 → spec bumps to v0.3, D-008 logged, OBJECTIVE +
+T-005/T-007 re-scoped, T-010/T-011 drafted — then cycle-3 build starts from the amended backlog.
+
 ---
 
 ## 0. Executive summary
