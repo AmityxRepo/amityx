@@ -5,44 +5,51 @@ Cycle: 3 (open)
 Updated: 2026-07-12
 
 ## Resume cursor
-T-003 done (`feature/T-003`, commit b818075). T-004 done (`feature/T-004`, commits 913b4ad +
-57e629c) — app/DESIGN.md + tokens + base components, verified via build/contrast/Playwright
-screenshots. **T-005 (schema+RLS) BLOCKED before spawn** — no Docker locally (no local Supabase
-alt.), no live Supabase credentials anywhere in this environment (`.env.local` has placeholder
-values only), `supabase` CLI not installed. Cannot author-and-prove RLS migrations without a real
-project. Session paused here; resume by feeding the Supabase env values into this same cursor —
-T-005 picks up immediately, no re-planning needed. Sequence: T-003 ✓ → T-004 ✓ → **T-005 ⛔** →
-T-006 → {T-007 ∥ T-008} → T-010 → T-011 → T-009.
+T-003 done (`feature/T-003`, b818075). T-004 done (`feature/T-004`, 913b4ad+57e629c). **T-005
+schema+RLS: SQL/tests/seed COMPLETE, committed `feature/T-005` (5e7611d) — DDL apply to the live
+DB is the only piece blocked** (see Blockers #1; same credential also gates T-005's own live RLS
+test run). Founder supplied real Supabase client keys (URL/anon/service-role) into
+`app/web/.env.local` — those work fine for REST/Auth API calls (tests will run once tables exist)
+but NOT for running DDL, which needs a different credential (access token or DB password). GitHub
+repo AmityxRepo/amityx now exists but push is still 403 for the acting account (Blocker #2).
+Proceeding to T-006 next per founder instruction — build everything not gated on SMTP or on the
+same T-005 DDL-apply wall. Sequence: T-003 ✓ → T-004 ✓ → T-005 ~ (code done, apply blocked) →
+**T-006 (next)** → {T-007 ∥ T-008} → T-010 → T-011 → T-009.
 
 ## Progress ledger
-Last criterion advanced: 2026-07-12 (c3 — T-003+T-004 done; one visual language now covers all surfaces)
+Last criterion advanced: 2026-07-12 (c3 — T-005 schema/RLS/tests/seed authored; data spine ready to apply)
 Stall count: 0
 
 ## Now
-Paused on the T-005 blocker below. Nothing else in flight.
+Starting T-006 (auth + hub signup + provisioning).
 
 ## Next
-- Founder supplies the T-005 blocker inputs (below) → T-005 resumes immediately.
-- T-006 will additionally need: Google Workspace SMTP app password (help@agapaycare.com).
-- Deploy (T-003 preview check + T-009 production) needs: GitHub push access for AmityxRepo/amityx
-  (currently 403 for the acting account) and Cloudflare Pages connect/auth.
+- Any one of: SUPABASE_ACCESS_TOKEN (personal access token) or the project's DB password →
+  unblocks T-005's DDL apply + live RLS test run, AND unblocks T-006/T-007/T-008 wherever they need
+  real tables to exist for live verification.
+- T-006 will additionally need: Google Workspace SMTP app password (help@agapaycare.com) — will
+  report the exact ask when T-006 reaches that point.
+- GitHub push access for AmityxRepo/amityx (below) unblocks preview/production deploy checks.
 
 ## Blockers
-1. **T-005 hard blocker (schema + RLS):** need a live Supabase project's `VITE_SUPABASE_URL` +
-   `VITE_SUPABASE_ANON_KEY` (client), and `SUPABASE_SERVICE_ROLE_KEY` (tests/seeds only, never
-   client) — either the founder's existing project `jjnzbayatcfkkoyorhes` (D-006) or a fresh free
-   project. Also need the project ref + a Supabase access/personal token if `supabase link`/CLI
-   auth is to run non-interactively. Where it goes: `app/web/.env.local` (gitignored, already
-   scaffolded) for the client keys; service-role key stays out of any committed file, used only by
-   the developer/tester locally or as a CI secret. Why: no Docker on this machine rules out
-   `supabase start`, so there is no way to author-and-prove the adversarial RLS test suite without
-   a reachable Postgres instance.
-2. **GitHub push denied (403)** to github.com/AmityxRepo/amityx for the current git identity
-   (`llllollki`) — blocks PR/preview-deploy checks only; local development unaffected and two
-   feature branches (`feature/T-003`, `feature/T-004`) are committed locally. Needs: repo write
-   access granted to the pushing account, or founder pushes these branches themselves.
-3. **T-006 (upcoming):** Google Workspace SMTP app password for help@agapaycare.com — not yet
-   blocking (T-006 hasn't started), flagging early since it gates the very next task after T-005.
+1. **DDL-apply credential (T-005, carries into T-006+):** migrations are fully written
+   (`supabase/migrations/*.sql`, 4 files, 20 tables) but applying them needs ONE of:
+   (a) `SUPABASE_ACCESS_TOKEN` — a Supabase **personal access token** from
+   supabase.com/dashboard/account/tokens (different from the anon/service-role keys already
+   supplied) — set as an env var, enables `npx supabase link --project-ref jjnzbayatcfkkoyorhes`
+   then `npx supabase db push`; OR
+   (b) the project's **database password** (Project Settings → Database → Connection string) for
+   a direct Postgres connection. Either one, and I apply the migrations myself immediately — no
+   further founder action needed beyond supplying it. **Manual fallback if neither is supplied:**
+   founder pastes each file in `supabase/migrations/` (filename order) into Supabase Dashboard →
+   SQL Editor, then `supabase/seed.sql` — runbook in `supabase/README.md`.
+2. **GitHub push denied (403)** to github.com/AmityxRepo/amityx for git identity `llllollki` —
+   confirmed AFTER the repo was created, so it's a permissions issue, not a missing-repo issue.
+   Blocks PR/preview-deploy checks only; local development unaffected — three feature branches
+   (`feature/T-003`, `T-004`, `T-005`) committed locally, none pushed. Needs: that GitHub account
+   added as a collaborator with write access to AmityxRepo/amityx (or founder pushes locally-built
+   branches themselves / supplies a PAT with repo write scope for this session to use instead).
+3. **T-006 (upcoming, not yet hit):** Google Workspace SMTP app password for help@agapaycare.com.
 
 ## Drift
 none

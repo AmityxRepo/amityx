@@ -7,7 +7,7 @@ Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles 
 ### M3: V1 build — free layer + hub ops + internal CRM — in progress (cycle 3)
 - [x] T-003 Scaffold app/web (Vite SPA + PWA, Cloudflare Pages) — done 2026-07-12, local commit b818075 (GitHub push blocked)
 - [x] T-004 Design system (app/DESIGN.md) — done 2026-07-12, uncommitted (bundled w/ T-005 push once GitHub access resolves)
-- [ ] T-005 Tenancy schema + RLS migrations incl. booking/consent/guardian_links (opus)
+- [~] T-005 Tenancy schema + RLS migrations — SQL/tests/seed done, committed `feature/T-005` (5e7611d); DDL apply blocked (needs SUPABASE_ACCESS_TOKEN or DB password)
 - [ ] T-006 Auth + hub signup + provisioning (opus)
 - [ ] T-007 Hub app core: kiosk check-in, roster, notes, booking inbox
 - [ ] T-008 Internal CRM (/crm)
