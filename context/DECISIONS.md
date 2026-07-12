@@ -40,3 +40,18 @@ Affects: ARCHITECTURE.md, T-003..T-009, PRODUCT_SPEC.md §12 IA.
 Choice: Founder created a Cloudflare account for Amityx. SPA hosts on Cloudflare Pages (free, commercial use allowed); photos/media on R2 (10GB + zero egress fees) instead of Supabase Storage; Vercel demoted to optional dev previews. Supabase Pro ($25/mo) deferred until first paying hub — trigger is backups/no-pause duty of care, not capacity (R-003).
 Because: Vercel Hobby bans commercial use; Supabase 5GB/mo egress would cap photo delivery at ~8–12 hubs — R2 removes both limits at $0.
 Affects: ARCHITECTURE.md, OBJECTIVE constraints, T-003, T-009, R-003.
+
+## D-009: P.8 GTM RATIFIED (founder deferred to orchestrator recommendation) — 2026-07-11
+Choice: Free-forever layer (public booking/waitlist page + parent broadcast/photo moments + kiosk self check-in, zero during-class burden) with owner-pays ops tier. Resolved P.8 dials: 30-day free photo window · kiosk = hub's own tablet · booking page leads the sales pitch.
+Because: Removes the adoption-friction objection (Dojo motion) while attacking the owner's #1 pain (empty classes); keeps v0.2 provider-pays economics and the P.6 day-120 paid gate.
+Affects: spec v0.3, OBJECTIVE v3, T-005/T-007 re-scope, new T-010/T-011.
+
+## D-010: ICP age band + entry pricing (founder deferred) — 2026-07-11
+Choice: Position as "toddler & preschool activity hubs" (core 0–5; siblings to ~8 accepted, schema is age-agnostic). Pricing: free layer forever; paid ops tier $49/mo launch price per location (list $79); concierge migration always free.
+Because: Sharp positioning beats broad (0–12 dilutes vs iClassPro/Jackrabbit turf); $49 undercuts the verified $79–139 entry floor (R-002) with margin at our $0–25 infra cost.
+Affects: spec P.3/P.8, marketing copy, CRM pipeline fields.
+
+## D-011: Staged media storage (R2 needs a card on file — verified) — 2026-07-11
+Choice: Stage 1 (launch): photos in Supabase Storage behind a storage-adapter interface — $0, no card anywhere; ceiling ~8–12 hubs. Stage 2 (at ~5 active hubs or first paying hub, whichever first): founder adds card to enable R2 (free within 10GB/zero egress; set billing alert), flip adapter, migrate media; ceiling → 25–50 hubs. Photos served only via authenticated signed URLs at both stages (toddler media never public).
+Because: R2 free tier requires a payment method (verified 2026-07-11); founder wants zero payment surface now; adapter makes the flip a config change, not a rewrite.
+Affects: ARCHITECTURE.md, T-011, R-003 ceilings.

@@ -32,3 +32,7 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 21:40 · c2 · orchestrator · research · infra pricing · done — verified: Supabase Pro $25/mo, Vercel Pro $20/user/mo (Hobby bans commercial use, enforced); Cloudflare Pages = free commercial alt → R-002 (P.7 watch item closed)
 2026-07-11 22:00 · c2 · user · decision · D-008 · done — Cloudflare account created; production = Pages + R2 media; Supabase stays free until first paying hub
 2026-07-11 22:10 · c2 · orchestrator · research · R-003 · done — capacity model: ~25–50 hubs / ~2.5–7.5k parents on $0 infra (Supabase JSON egress binds); T-003/T-009/ARCHITECTURE/OBJECTIVE updated → research/R-003.md
+2026-07-11 22:30 · c2 · user · decision · deferral · done — founder: Cloudflare account is FREE tier; defers open decisions to orchestrator recommendations
+2026-07-11 22:35 · c2 · orchestrator · research · cloudflare free · done — verified: Pages unlimited bandwidth no card; R2 REQUIRES card on file → staged media plan → R-003 addendum
+2026-07-11 22:40 · c2 · orchestrator · decision · D-009..D-011 · done — P.8 GTM ratified; ICP toddler/preschool 0–5 core; pricing $49 launch/$79 list; staged media (Supabase Storage → R2 @ ~5 hubs)
+2026-07-11 22:45 · c2 · orchestrator · plan · v0.3 · done — spec v0.3, OBJECTIVE v3 (6 criteria), T-005/T-007 re-scoped, T-010/T-011 drafted; remaining founder inputs: first-10 list + "go"

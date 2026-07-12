@@ -1,7 +1,7 @@
 # Amityx — Living Product Specification
 
-**Version 0.2 (provider-first pivot)** · updated 2026-07-11 · Owners: founders · Status: pivot ratified by founder; V1 build pending kickoff
-Changelog: v0.1 founding draft (parent-first) → **v0.2 pivot**: provider-pays B2B, AI on hold, web+PWA only, $0 infra. See [Pivot v0.2](#pivot-v02--provider-first-2026-07-11).
+**Version 0.3** · updated 2026-07-11 · Owners: founders · Status: GTM ratified (D-009/D-010); V1 build ready — awaiting founder "go" + first-10-hubs list
+Changelog: v0.1 founding draft (parent-first) → v0.2 pivot: provider-pays B2B, AI on hold, web+PWA, $0 infra → **v0.3**: P.8 GTM ratified (free booking page + parent delight layer + kiosk), ICP = toddler/preschool hubs (0–5 core), pricing $49 launch/$79 list, hosting = Cloudflare Pages, staged media (Supabase Storage → R2 at ~5 hubs, D-011).
 Companion research: [`R-001`](../context/research/R-001.md) (parent-side landscape) · [`R-002`](../context/research/R-002.md) (provider-side landscape + alh-tracker pattern study) — **[V]** = web-verified 2026-07-11; **[K]** = model-knowledge, verify before citing externally.
 
 > **One-line thesis (v0.2):** Become the operations platform that toddler activity hubs pay for —
@@ -144,7 +144,12 @@ undercutting the $79–139 floor); does "Amityx" brand serve B2B hub owners? (na
 **Next decisions:** Founder confirms ICP age band + first-10 list → kick off cycle 3 (V1 build:
 T-003..T-009 backlog is drafted in `context/tasks/`).
 
-### P.8 Penetration strategy — the ClassDojo question (PROPOSED, 2026-07-11 — pending founder ratification; not yet reflected in OBJECTIVE/tasks)
+### P.8 Penetration strategy — the ClassDojo question (RATIFIED 2026-07-11, D-009/D-010 — reflected in OBJECTIVE v3 + tasks T-005/T-007/T-010/T-011)
+
+> **Ratification note (v0.3):** founder deferred the open dials to the orchestrator; resolved as:
+> 30-day free photo window · kiosk = hub's own tablet · booking page leads the pitch · ICP =
+> toddler & preschool hubs (0–5 core, siblings to ~8) · pricing free layer forever + ops tier
+> $49/mo launch ($79 list) · media staged Supabase-Storage→R2 per D-011 (R2 needs a card on file).
 
 **The objection this answers:** hub owners won't adopt software that adds process *during* class —
 staff hands are full (wet pool decks, paint, ten toddlers). Any strategy that starts with "your

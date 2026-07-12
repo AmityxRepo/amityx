@@ -19,13 +19,12 @@ Stall count: 0
 Nothing in flight.
 
 ## Next
-- Founder ratifies/amends spec §P.8 (proposed GTM: free booking-page + parent-delight layer, Dojo-adapted) → on yes: v0.3, D-008, OBJECTIVE + T-005/T-007 re-scope, draft T-010/T-011
-- Founder answers P.7 open questions: ICP age band (0–5 vs 0–12) · first-10-hubs list · entry pricing posture
-- Cycle 3: V1 build kickoff (planner refines drafted backlog)
-- Pre-build founder checks (no code): Workspace SMTP app password for Supabase custom SMTP (hosting + capacity questions resolved: D-008, R-003)
+- Cycle 3: V1 build kickoff — planner refines ratified backlog T-003..T-011 (order: 003→004→005→006→{007∥008}→010→011→009)
+- Founder inputs (non-blocking for early tasks): first-10-hubs list · Workspace SMTP app password (needed at T-006)
+- Stage-2 media flip (R2, card on file) deferred until ~5 active hubs or first paying hub (D-011)
 
 ## Blockers
-Founder "go" for cycle 3 (user said no coding this cycle — honored).
+Founder "go" for cycle 3. All strategy/infra decisions resolved (D-001..D-011); spec at v0.3.
 
 ## Drift
 none
