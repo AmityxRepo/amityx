@@ -1,0 +1,47 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+build/
+.next/
+out/
+.expo/
+.expo-shared/
+*.tsbuildinfo
+
+# Platform / tooling
+.vercel/
+.wrangler/
+.turbo/
+.cache/
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# Native / mobile build artifacts
+app/mobile/ios/
+app/mobile/android/
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Forge working files that shouldn't be shared (keep OBJECTIVE, DECISIONS, ARCHITECTURE)
+context/archive/
