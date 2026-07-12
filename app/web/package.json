@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint:vocab": "node scripts/lint-vocab.mjs",
-    "gen:assets": "node scripts/gen-assets.mjs"
+    "gen:assets": "node scripts/gen-assets.mjs",
+    "seed": "node --experimental-websocket scripts/seed.mjs",
+    "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
