@@ -38,3 +38,7 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 22:45 · c2 · orchestrator · plan · v0.3 · done — spec v0.3, OBJECTIVE v3 (6 criteria), T-005/T-007 re-scoped, T-010/T-011 drafted; remaining founder inputs: first-10 list + "go"
 2026-07-11 23:00 · c2 · user · decision · D-012 · done — founder directive: ease-of-use is law; owners/staff/parents must never be confused by features/buttons/flows
 2026-07-11 23:10 · c2 · orchestrator · design · spec P.9 · done — v0.4: ten testable rules + canonical UI vocabulary + tester gates; wired into OBJECTIVE constraints, ARCHITECTURE conventions, T-004 (DESIGN.md section 1), T-009 (usability gates + hallway test)
+2026-07-11 23:30 · c2 · user · decision · D-013 · done — GO for cycle-3 build (via dispatched session); first-10 list delegated to orchestrator
+2026-07-11 23:40 · c2 · orchestrator · plan · pilot targets + kickoff · done — docs/PILOT_TARGETS.md (10 archetype slots, sourcing playbook, outreach script, CRM seed) + docs/BUILD_KICKOFF_PROMPT.md; T-008 seeds pipeline from it
+
+## Cycle 2 — closed 2026-07-11 (final): strategy complete at spec v0.4 (D-001..D-013); cycle 3 = V1 build, dispatch-ready

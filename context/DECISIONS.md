@@ -60,3 +60,8 @@ Affects: ARCHITECTURE.md, T-011, R-003 ceilings.
 Choice: PRODUCT_SPEC §P.9 is binding on every screen and every future change: one job per screen, 5-second test, 3-tap rule for daily jobs, canonical plain-words UI vocabulary, icon+label buttons, 4-tab budget (displace-never-crowd), forgiving errors, 44px/16px/AA floor, no tooltip crutches.
 Because: Founder directive — hub owners, staff, and parents must never be confused; simplicity IS the GTM (P.8's zero-training claims) and a moat vs feature-crowded incumbents.
 Affects: app/DESIGN.md (T-004 embeds it), tester design-review gates (T-009 + every UI cycle), all UI tasks permanently.
+
+## D-013: Pilot targets delegated; GO given; build runs via dispatched session — 2026-07-11
+Choice: First-10 list = archetype slots + sourcing playbook (docs/PILOT_TARGETS.md; founder fills names from his metro — assumed California, confirm). Founder gave GO; cycle 3 starts in a dispatched session using docs/BUILD_KICKOFF_PROMPT.md.
+Because: Founder deferred the list; real business names must come from his geography/relationships, archetypes and order from R-002.
+Affects: T-008 CRM seed, cycle-3 kickoff, STATE resume cursor.
