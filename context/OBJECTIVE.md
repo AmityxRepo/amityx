@@ -1,21 +1,24 @@
 # Objective
+<!-- v2 (pivot, 2026-07-11): provider-first. v1 (founding spec) delivered & archived in JOURNAL c1. -->
 
 ## Goal
-Amityx — the one app parents of kids 0–12 open daily: activities, communication, development,
-and memories across every provider. Cycle-1 deliverable: the founding product spec (docs/PRODUCT_SPEC.md).
+Amityx — the operations platform toddler activity hubs (art, swim, karate, day care, boot camp,
+multi-activity venues) pay for; run like AgapayCare: internal CRM + hub signup/app. Web + installable PWA, no app stores.
 
 ## Acceptance criteria
-1. Problems ranked by severity, with why existing apps leave the gaps — BEFORE any feature list; venture-scale verdict stated.
-2. All 14 named competitors analyzed: target customer, strengths, weaknesses, why parents leave, differentiation.
-3. All 9 personas covered: daily routine, frustrations, goals, tech habits, purchasing decisions.
-4. Product + AI + virality + business models (ranked); every major recommendation carries an explicit critique.
-5. MVP solves ONE painful problem (no overbuild); V2/V3/V5/V10, technical design, and screen-level UI design defined.
-6. Every section closes with Key insights / Risks / Open questions / Next decisions; Mermaid + tables used where they clarify.
+1. Hub owner self-signup → hub created → programs + class schedules defined in ≤15 min (multi-activity templates).
+2. Hub staff PWA (375px-first): per-class roster, child check-in/out attendance, daily notes per child.
+3. Child + guardian records isolated per hub — adversarial RLS test proves zero cross-tenant access.
+4. Internal CRM at /crm (staff-auth only): hub pipeline (subscription status, onboarding stage, follow-ups, provisioning → handoff).
+5. Live at $0 on the named free accounts; installable PWA; auth/transactional email via Workspace SMTP.
+6. Out-of-scope guards hold in V1: no payment processing, no LLM/AI calls, no store submissions.
 
 ## Constraints
-Future build on Forge defaults (git + Supabase + Vercel + Cloudflare, framework/INFRA.md);
-free-by-default (framework/COST_POLICY.md). The spec must challenge the founder's assumptions,
-not affirm them — flag every place the stated vision is the wrong strategy.
+Free tiers only (framework/COST_POLICY.md). Fixed accounts: github.com/AmityxRepo/amityx ·
+vercel.com/amityx · Supabase project jjnzbayatcfkkoyorhes · email help@agapaycare.com (Google
+Workspace SMTP). Stack mirrors C:\Projects\alh-tracker (React+TS+Vite+Tailwind+Supabase on Vercel)
+unless the planner justifies otherwise (D-007). RLS on every table; schema via migrations only.
 
 ## Out of scope
-App code (no app/ this cycle) · brand identity/logo · fundraising deck · legal entity work.
+Payment processing (record/track only) · AI/LLM features (parked, D-004) · parent-facing app
+(Phase 2+, mirrors alh-tracker family-portal posture) · native/store apps · marketplace/discovery.

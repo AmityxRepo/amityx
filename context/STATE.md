@@ -1,30 +1,30 @@
 # State
-Phase: delivered (cycle 1)
-Build tier: complex (future app) — cycle 1 ran the non-app produce→verify→deliver path
-Cycle: 1 (closed)
+Phase: delivered (cycle 2 — pivot spec update; no code, per user)
+Build tier: complex (multi-tenant auth + CRM + PWA) — cycles 1–2 ran the non-app produce path
+Cycle: 2 (closed)
 Updated: 2026-07-11
 
 ## Resume cursor
-Cycle 1 closed: docs/PRODUCT_SPEC.md delivered and verified. Next session starts at
-"awaiting founder ratification" — see Blockers. On go: rewrite OBJECTIVE.md for the V1 build
-(Child Inbox MVP, §10.1 of the spec = scope; the four V1 metrics = acceptance criteria),
-then run full PLAN → DEVELOP → TEST cycle (greenfield: scaffold → design system → features).
+Cycle 2 closed: pivot v0.2 applied across spec + context; V1 build backlog T-003..T-009 drafted.
+Next session: on founder "go", open cycle 3 = V1 BUILD — planner (opus) refines T-003..T-009
+drafts against OBJECTIVE v2 + ARCHITECTURE.md, then PLAN → DEVELOP → TEST per CLAUDE.md.
+Greenfield sequence: T-003 scaffold → T-004 design system → T-005 schema/RLS → T-006 auth/signup
+→ T-007 hub app ∥ T-008 CRM → T-009 e2e+deploy.
 
 ## Progress ledger
-Last criterion advanced: 2026-07-11 (all 6 criteria ✓, cycle 1)
+Last criterion advanced: 2026-07-11 (c2 — OBJECTIVE v2 established; build criteria all ☐)
 Stall count: 0
 
 ## Now
 Nothing in flight.
 
 ## Next
-- Founder ratification of spec §13.4 decisions (wedge, MVP freeze, cuts, no-ads)
-- Cycle 2: OBJECTIVE rewrite → V1 build kickoff (planner, opus-tier)
-- Founder-side parallel tasks (no code): name test, diary study, Google OAuth paperwork, LLM API key
+- Founder answers P.7 open questions: ICP age band (0–5 vs 0–12) · first-10-hubs list · entry pricing posture
+- Cycle 3: V1 build kickoff (planner refines drafted backlog)
+- Pre-build founder checks (no code): Vercel Hobby commercial-use terms · Supabase free-tier limits · Workspace SMTP app password for Supabase custom SMTP
 
 ## Blockers
-User decision required before cycle 2: ratify spec recommendations (PRODUCT_SPEC.md §13.4);
-LLM API key funding for extraction (COST_POLICY — external cost, needs explicit founder OK).
+Founder "go" for cycle 3 (user said no coding this cycle — honored).
 
 ## Drift
 none

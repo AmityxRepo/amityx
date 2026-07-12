@@ -14,3 +14,14 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 19:15 · c1 · orchestrator · blocker · cycle-2 · blocked — awaiting founder ratification (spec §13.4) + LLM API key decision
 
 ## Cycle 1 — closed 2026-07-11: founding product spec delivered & verified; 0 bugs; criteria 1–6 met; cycle 2 gated on founder decisions
+
+## Cycle 2
+2026-07-11 20:05 · c2 · user · intake · pivot · done — founder decisions: provider-pays (toddler activity hubs), AI on hold, web+PWA no stores, $0 infra (pinned accounts), mirror alh-tracker flow
+2026-07-11 20:10 · c2 · orchestrator · research · alh-tracker · done — three-surface model studied (CRM/tenant app/family-portal-later; React+Vite+Supabase+Vercel, PWA, Playwright)
+2026-07-11 20:15 · c2 · orchestrator · research · R-002 · done — provider-side competitors + pricing; gap = multi-activity toddler hubs → research/R-002.md
+2026-07-11 20:20 · c2 · orchestrator · decision · D-003..D-007 · done — pivot, AI hold, PWA/no-stores, pinned infra, alh-mirror
+2026-07-11 20:30 · c2 · orchestrator · produce · T-002 · done — OBJECTIVE v2, ARCHITECTURE v1, spec v0.2 (pivot section + 7 banners), INDEX → docs/PRODUCT_SPEC.md
+2026-07-11 20:35 · c2 · orchestrator · plan · T-003..T-009 · backlog — V1 build drafts (planner refines at cycle-3 PLAN) → tasks/
+2026-07-11 20:40 · c2 · orchestrator · blocker · cycle-3 · blocked — founder "go" + P.7 answers (age band, first-10 list, pricing)
+
+## Cycle 2 — closed 2026-07-11: pivot v0.2 applied (spec+context+backlog); no code per user instruction; cycle 3 = V1 build on founder go

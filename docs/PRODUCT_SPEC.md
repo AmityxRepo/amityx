@@ -1,16 +1,18 @@
 # Amityx — Living Product Specification
 
-**Version 0.1 (founding draft)** · 2026-07-11 · Owners: founders · Status: for wedge ratification
-Companion research: [`context/research/R-001.md`](../context/research/R-001.md) — facts marked **[V]** were verified 2026-07-11; **[K]** are model-knowledge, verify before citing externally.
+**Version 0.2 (provider-first pivot)** · updated 2026-07-11 · Owners: founders · Status: pivot ratified by founder; V1 build pending kickoff
+Changelog: v0.1 founding draft (parent-first) → **v0.2 pivot**: provider-pays B2B, AI on hold, web+PWA only, $0 infra. See [Pivot v0.2](#pivot-v02--provider-first-2026-07-11).
+Companion research: [`R-001`](../context/research/R-001.md) (parent-side landscape) · [`R-002`](../context/research/R-002.md) (provider-side landscape + alh-tracker pattern study) — **[V]** = web-verified 2026-07-11; **[K]** = model-knowledge, verify before citing externally.
 
-> **One-line thesis:** Parents don't need another app for a part of their child's life — they need
-> the layer above all of them. Amityx wins by owning the **child graph**: one longitudinal,
-> parent-owned record per child that starts as a schedule, becomes a development record, and ends
-> as the family's memory archive. AI ingestion is the wedge; the child graph and the provider
-> network are the moat.
+> **One-line thesis (v0.2):** Become the operations platform that toddler activity hubs pay for —
+> internal CRM + concierge onboarding, hub app, then a parent surface — and let the paying hub
+> network bootstrap the long-term prize v0.1 identified: the **child graph**, one longitudinal
+> record per child across every activity. The entry door changed (hubs, not inboxes); the endgame
+> did not.
 
 ## Table of contents
-1. [Executive summary](#0-executive-summary)
+0. [**Pivot v0.2 — provider-first (2026-07-11)**](#pivot-v02--provider-first-2026-07-11) ← current strategy
+1. [Executive summary](#0-executive-summary) (v0.1, partially superseded)
 2. [Founder assumption audit](#1-founder-assumption-audit)
 3. [The problem](#2-the-problem)
 4. [Competitive landscape](#3-competitive-landscape)
@@ -27,7 +29,128 @@ Companion research: [`context/research/R-001.md`](../context/research/R-001.md) 
 
 ---
 
+## Pivot v0.2 — provider-first (2026-07-11)
+
+### P.1 What the founder decided (and what it means)
+1. **The payer is the toddler activity hub owner** — art class, day care, swimming, boot camp,
+   karate, multi-activity venues. Parents are no longer the entry customer.
+2. **AI/LLM features on hold** (D-004) — no model spend. The Child Inbox wedge (§5) and AI system
+   (§7) are parked, not deleted.
+3. **Web + mobile via installable PWA, no app stores** (D-005) — one responsive SPA.
+4. **$0 infrastructure** on existing accounts (D-006): GitHub `AmityxRepo/amityx`, Vercel
+   `amityx`, Supabase `jjnzbayatcfkkoyorhes`, transactional email via Google Workspace
+   (help@agapaycare.com SMTP).
+5. **Business flow mirrors AgapayCare/alh-tracker** (D-007): the founder's company runs an
+   **internal CRM** (pipeline, onboarding stages, follow-ups, provisioning); hub owners use the
+   **signup page and the app**. A parent surface follows later, exactly like alh-tracker's
+   Phase-2 family portal.
+
+### P.2 The operating model (three surfaces)
+
+```mermaid
+graph LR
+    subgraph Amityx company - internal
+        CRM[Internal CRM /crm<br/>pipeline, onboarding stages,<br/>follow-ups, provisioning]
+    end
+    subgraph Hub - the paying tenant
+        SU[Signup page] --> HUB[Hub app PWA<br/>programs, schedules, roster,<br/>attendance, daily notes]
+    end
+    subgraph Phase 2+
+        PAR[Parent surface<br/>view-only first]
+    end
+    CRM -- provision + concierge onboarding --> HUB
+    LEAD[Founder-led leads<br/>+ self-serve signups] --> CRM
+    HUB -. per-child visibility grants .-> PAR
+```
+
+Sales motion: founder/staff-led with **concierge onboarding** — we set the hub up ourselves via
+the CRM. This is the AgapayCare playbook and it directly attacks the incumbents' biggest switching
+wound (iClassPro-class migration fees of $300–800 **[V]**, R-002).
+
+### P.3 ICP and the competitive read (R-002)
+**ICP:** owner of a toddler/preschool-age activity hub, especially **multi-activity venues** (one
+roof: art + swim + karate + open-play + camps), 1–3 locations, 30–300 enrolled children,
+currently on spreadsheets + 2–3 single-purpose tools.
+
+The market splits three ways, and multi-activity toddler hubs fall in the crack:
+| Cluster | Players | DNA | Entry price **[V]** |
+|---|---|---|---|
+| Class-roster SaaS | iClassPro, Jackrabbit, Pike13, Amilia, Enrollsy, Omnify, Sawyer | single-vertical class workflows | $49–139/mo + setup/migration fees |
+| Playground/POS | ROLLER, WakeSys, Aluvii, Parker, WellnessLiving | walk-in ticketing, parties, POS | mid-market+ |
+| Licensed childcare | brightwheel, Procare, Lillio | compliance-grade daycare | $36–1,800/mo |
+
+**Differentiation (in order of defensibility):** (1) multi-activity toddler operations as the
+first-class model — programs of different shapes under one roster/attendance spine; (2) concierge
+onboarding + free migration, operated through the internal CRM; (3) modern 375px-first staff PWA
+(incumbents are desktop-web-era); (4) $0 cost base → aggressive entry pricing under the $79–139
+floor; (5) later, the parent surface incumbents bolt on badly.
+
+### P.4 What's parked vs. what survives from v0.1
+| v0.1 element | v0.2 status |
+|---|---|
+| Child Inbox wedge (§5), AI system (§7) | **Parked.** Revisit trigger: funded LLM key + ≥10 active hubs. Safety rules in §7.2 bind whenever AI returns. |
+| Consumer freemium #1 (§9) | **Parked** with the parent surface. Provider SaaS (#2) is now the business; payments (#3) stays the venture case. |
+| Expo iOS+Android, app stores | **Dropped** for PWA (D-005). |
+| Child-spine schema, RLS, provenance | **Survives** — children stay first-class records (`context/ARCHITECTURE.md`), so the Phase-2+ parent surface and the long-run child graph need no rewrite. |
+| Provider claim loop (§8) | **Transformed** — from shadow-page virality to direct sales + CRM pipeline now; claim-loop mechanics become relevant again if/when the parent surface ships. |
+| No-ads commitment, privacy posture, export-anything | **Survives unchanged.** |
+| Personas | Dee (studio owner) & Tom (camp) are **now V1 primary**; Maya/Jess become end-beneficiaries via their hub; Ms. Park-type staff are daily users. |
+
+### P.5 V1 scope and revised roadmap
+**V1 (the active MVP — acceptance criteria live in `context/OBJECTIVE.md`):** hub self-signup →
+programs/class schedules (multi-activity templates) → staff PWA roster + check-in/out attendance +
+daily notes per child → guardian records → internal CRM (pipeline, onboarding checklist,
+follow-ups, provisioning) → adversarial multi-tenant RLS proof → live at $0 on the pinned
+accounts. **Excluded from V1:** payment processing (record/track only), AI, parent-facing
+anything, store apps, marketplace.
+
+| Version | Theme | Adds |
+|---|---|---|
+| V1 | Hub ops core + internal CRM | scope above |
+| V2 | Money + reach | Stripe payments/registration ($0 fixed cost — fees ride on hub revenue; founder OK required per COST_POLICY), waivers/forms, announcements to guardians (email), CSV import migration kit |
+| V3 | Parent surface (read-only PWA) | per-child schedule/notes/photos visibility grants — alh family-portal pattern, counsel-reviewed |
+| V4 | Parent surface grows teeth | multi-hub child view — the child graph starts here, through hubs instead of inboxes (v0.1 §5 revived) |
+| V5+ | AI returns (trigger-gated) | daily-notes drafting for staff, digests for parents (§7 designs, §7.2 safety rules) |
+
+### P.6 V1 metrics and kill criteria (replace §13.2)
+- **Traction:** 5 hubs live with real schedules within 90 days of V1; ≥3 of them with weekly-active
+  staff (attendance logged ≥3 days/wk).
+- **Willingness to pay:** ≥3 hubs converted to a paid commitment (any nonzero price) by day 120 —
+  free pilots don't count as validation past that line.
+- **Kill/pivot:** if after 10 concierge-onboarded hubs none will pay, the segment is a hobby
+  market for us — re-derive (candidates: move up-market, or revive parent-first with funding).
+- **Ops health:** cross-tenant RLS test suite green on every migration; $0 infra bill holds.
+
+### P.7 Co-founder assessment — the honest version
+This pivot does the thing v0.1's assumption audit (A3) warned against: **a head-on fight with
+entrenched vertical B2B SaaS.** It can still be right, for four reasons: the multi-activity
+toddler niche is genuinely unserved (R-002 gap analysis); concierge GTM is a real SMB wedge that
+self-serve incumbents structurally under-invest in; the founder already operates this exact
+playbook at AgapayCare (pattern reuse de-risks build AND ops); and $0 cost base means survival
+doesn't depend on venture pacing. What we gave up: the zero-CAC consumer loop and single-player
+adoption speed — **founder sales capacity is now the growth bottleneck**, and that constraint,
+not code, will set the V1 timeline. Watch items: Vercel Hobby commercial-use terms and Supabase
+free-tier limits (R-002) must be re-checked before the first paying customer; and "toddler" vs
+"youth" scoping needs a decision — karate/boot-camp hubs skew older, and restricting to 0–5
+shrinks the ICP while 0–12 dilutes the toddler positioning.
+
+**Key insights:** The endgame (child graph) is unchanged; only the entry door moved. The internal
+CRM isn't overhead — it IS the differentiator (concierge onboarding as product).
+**Risks:** A3 head-on risk absorbed knowingly; sales capacity bottleneck; free-tier terms;
+ICP age-band ambiguity.
+**Open questions:** First-10-hubs list (does the founder have warm relationships as with ALH?);
+age-band scoping (0–5 vs 0–12); entry price point (recommend: free concierge pilot → $49–79/mo,
+undercutting the $79–139 floor); does "Amityx" brand serve B2B hub owners? (name test still open).
+**Next decisions:** Founder confirms ICP age band + first-10 list → kick off cycle 3 (V1 build:
+T-003..T-009 backlog is drafted in `context/tasks/`).
+
+---
+
 ## 0. Executive summary
+
+> **v0.2 note:** this section summarizes the v0.1 parent-first strategy. The strategy pivoted —
+> see [Pivot v0.2](#pivot-v02--provider-first-2026-07-11). Preserved as the design rationale for
+> the Phase-3+ parent surface and the child-graph endgame.
 
 **The problem is real and severe.** A family with two kids in school plus activities receives
 child-logistics information through 6–10 channels (provider apps, email, group texts, Facebook,
@@ -387,6 +510,10 @@ ARE the multiplayer loop; Dee is the named beachhead and gets nothing built unti
 
 ## 5. Strategy: the wedge and the moat
 
+> **PARKED (v0.2, D-003/D-004):** the Child Inbox wedge requires AI spend and a parent-first GTM —
+> both on hold. Preserved as the design for the Phase-3+ parent surface (P.5 roadmap). The moat
+> logic in §5.2 still governs: child-spine schema survives in V1 (`context/ARCHITECTURE.md`).
+
 ### 5.1 The wedge (V1): the Child Inbox
 **Promise:** *"Forward anything about your kid — an email, a flyer photo, a group-text screenshot —
 and Amityx turns it into their week."* One painful problem (P1/P2), solved single-player, in the
@@ -528,6 +655,9 @@ before V1 schema freeze.
 
 ## 7. AI system
 
+> **ON HOLD (v0.2, D-004):** no LLM features or API spend in V1. Revisit trigger: funded key +
+> ≥10 active hubs (P.4). When AI returns, §7.2's safety non-goals remain binding as written.
+
 ### 7.1 The jobs, in priority order
 1. **Extraction (V1, the wedge):** unstructured inbound (email/PDF/image/screenshot/voice) →
    schema-validated items: `{type, title, child_guess, org_guess, datetime, location, prep[],
@@ -622,6 +752,10 @@ shadow-page mechanic before V3.
 
 ## 9. Business model
 
+> **v0.2 re-rank:** the pivot promotes rank #2 (provider SaaS) to the NOW business and parks #1
+> (consumer freemium) with the parent surface. #3 (payments) remains the venture case, sequenced
+> at V2 of the pivot roadmap (P.5). Table preserved as v0.1 analysis; the reasoning still holds.
+
 ### 9.1 Ranked evaluation
 
 | Rank | Model | Ceiling | Time-to-revenue | Moat contribution | Risk | Verdict |
@@ -658,6 +792,10 @@ need two subscriptions (recommend: one covers both, it's one child graph).
 ---
 
 ## 10. MVP and roadmap
+
+> **SUPERSEDED (v0.2):** this was the parent-first MVP. The active V1 is defined in
+> [Pivot P.5](#pivot-v02--provider-first-2026-07-11) and `context/OBJECTIVE.md`. Preserved for
+> the Phase-3+ parent surface.
 
 ### 10.1 MVP (V1) — "the Child Inbox," 12 weeks of scope, not more
 **The one painful problem:** *"Everything about my kids arrives in ten places; I am the sync
@@ -718,6 +856,12 @@ Dan/Erin/Jess personas; recommend paying the Expo tax. Confirm.
 ---
 
 ## 11. Technical design
+
+> **v0.2 delta:** the ingestion pipeline (Email Routing → extraction) is OUT of V1 (AI on hold);
+> tenancy shifts household → hub; stack mirrors alh-tracker (React+Vite SPA + Supabase on Vercel,
+> PWA — no Expo/Next). Authoritative V1 architecture: `context/ARCHITECTURE.md`. Still binding
+> from this section: child-spine schema geometry, RLS non-negotiables, §11.4 compliance/privacy
+> posture, and the export-anything commitment.
 
 Constrained by `framework/INFRA.md` (git + Supabase + Vercel + Cloudflare) and
 `framework/COST_POLICY.md` (free tiers until revenue justifies otherwise). The V1 stack is
@@ -852,6 +996,12 @@ V1 week 1.
 
 ## 12. UI design
 
+> **v0.2 delta:** V1 information architecture is the three-surface model (P.2): marketing+signup ·
+> `/app` hub PWA (375px-first: today's classes → roster → check-in/out → notes) · `/crm` desktop
+> CRM (pipeline, hub detail, onboarding checklist, follow-ups — alh-tracker patterns). The
+> parent-app IA below moves to Phase 3 unchanged. Design-language principles and §12.3
+> accessibility bar apply to all three surfaces.
+
 Design language: Apple-level restraint — one accent per child (their color), generous whitespace,
 SF/Inter type, no gradients-and-confetti kids-app aesthetic (parents are the users, and they're
 tired). Full spec to be authored as `app/DESIGN.md` by the design-system skill at build time; this
@@ -937,6 +1087,10 @@ onboarding with 10 parents before any visual polish.
    the highest-variance mechanic in the plan — hence the legal gate before V3.
 
 ### 13.2 Kill / pivot criteria (decide now, while calm)
+
+> **v0.2:** replaced by [P.6](#pivot-v02--provider-first-2026-07-11). The v0.1 criteria below
+> apply only if the parent surface is revived. §13.1's steelman items 1–2 (Gmail, Ohai) are
+> deferred along with the parent wedge; item 3 (double-monetization miss) is now THE live risk.
 - V1 week-4 retention <25% after two onboarding iterations → wedge is wrong, stop adding
   features, re-derive.
 - Plus conversion <4% at V2+6mo AND claim loop <100 providers organically → the layered model

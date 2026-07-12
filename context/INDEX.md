@@ -4,7 +4,7 @@
 | OBJECTIVE.md | A | what we're building + acceptance criteria (the law) |
 | STATE.md | A | now / next / blockers / drift log |
 | PROGRESS.md | A | done ✓ / pending ☐ ledger for the goal |
-| ARCHITECTURE.md | B | stack, structure, data model, conventions (placeholder until build cycles) |
+| ARCHITECTURE.md | B | stack, tenancy model, roles, conventions (v1 @ pivot v0.2) |
 | DECISIONS.md | B | why things are the way they are (append-only) |
 | JOURNAL.md | B | append-only log of ALL events; read its tail to resume |
 | tasks/ | C | task briefs T-### (one file loaded per task) |
