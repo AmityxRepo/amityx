@@ -36,3 +36,5 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 22:35 · c2 · orchestrator · research · cloudflare free · done — verified: Pages unlimited bandwidth no card; R2 REQUIRES card on file → staged media plan → R-003 addendum
 2026-07-11 22:40 · c2 · orchestrator · decision · D-009..D-011 · done — P.8 GTM ratified; ICP toddler/preschool 0–5 core; pricing $49 launch/$79 list; staged media (Supabase Storage → R2 @ ~5 hubs)
 2026-07-11 22:45 · c2 · orchestrator · plan · v0.3 · done — spec v0.3, OBJECTIVE v3 (6 criteria), T-005/T-007 re-scoped, T-010/T-011 drafted; remaining founder inputs: first-10 list + "go"
+2026-07-11 23:00 · c2 · user · decision · D-012 · done — founder directive: ease-of-use is law; owners/staff/parents must never be confused by features/buttons/flows
+2026-07-11 23:10 · c2 · orchestrator · design · spec P.9 · done — v0.4: ten testable rules + canonical UI vocabulary + tester gates; wired into OBJECTIVE constraints, ARCHITECTURE conventions, T-004 (DESIGN.md section 1), T-009 (usability gates + hallway test)

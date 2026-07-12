@@ -14,6 +14,9 @@ boot camp, open-play) pay for; free layer wins adoption (booking page + parent d
 6. Live at $0 (Cloudflare Pages + Supabase free + staged media D-011); adversarial RLS isolation proof; guards hold: no payment processing, no AI, no store submissions.
 
 ## Constraints
+**Design law (D-012, binding on every screen + every change):** PRODUCT_SPEC §P.9 — one job per
+screen, 5-second test, 3-tap rule, plain-words vocabulary, icon+label buttons, forgiving errors;
+tester enforces as bugs. If it needs explaining, redesign it.
 Free tiers only (framework/COST_POLICY.md); NO card-on-file services in stage 1 (R2 deferred, D-011).
 Fixed accounts: github.com/AmityxRepo/amityx · Cloudflare free (Pages now; R2 at stage 2) ·
 Supabase jjnzbayatcfkkoyorhes (free until first paying hub, then Pro $25/mo) · help@agapaycare.com

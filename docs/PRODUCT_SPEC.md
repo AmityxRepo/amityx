@@ -1,7 +1,7 @@
 # Amityx — Living Product Specification
 
-**Version 0.3** · updated 2026-07-11 · Owners: founders · Status: GTM ratified (D-009/D-010); V1 build ready — awaiting founder "go" + first-10-hubs list
-Changelog: v0.1 founding draft (parent-first) → v0.2 pivot: provider-pays B2B, AI on hold, web+PWA, $0 infra → **v0.3**: P.8 GTM ratified (free booking page + parent delight layer + kiosk), ICP = toddler/preschool hubs (0–5 core), pricing $49 launch/$79 list, hosting = Cloudflare Pages, staged media (Supabase Storage → R2 at ~5 hubs, D-011).
+**Version 0.4** · updated 2026-07-11 · Owners: founders · Status: GTM ratified (D-009/D-010); design law set (D-012); V1 build ready — awaiting founder "go" + first-10-hubs list
+Changelog: v0.1 founding draft (parent-first) → v0.2 pivot: provider-pays B2B, AI on hold, web+PWA, $0 infra → v0.3: P.8 GTM ratified (free booking page + parent delight layer + kiosk), ICP = toddler/preschool hubs (0–5 core), pricing $49 launch/$79 list, hosting = Cloudflare Pages, staged media (D-011) → **v0.4**: P.9 ease-of-use design law (D-012) — binding on every screen and every future change.
 Companion research: [`R-001`](../context/research/R-001.md) (parent-side landscape) · [`R-002`](../context/research/R-002.md) (provider-side landscape + alh-tracker pattern study) — **[V]** = web-verified 2026-07-11; **[K]** = model-knowledge, verify before citing externally.
 
 > **One-line thesis (v0.2):** Become the operations platform that toddler activity hubs pay for —
@@ -222,6 +222,76 @@ problem is empty classes and parent-comms drudgery, not attendance.
 tablet?); does the booking page launch before or with the parent broadcast?
 **Next decisions:** Founder ratifies/amends P.8 → spec bumps to v0.3, D-008 logged, OBJECTIVE +
 T-005/T-007 re-scoped, T-010/T-011 drafted — then cycle-3 build starts from the amended backlog.
+
+### P.9 Design law — easy to understand, easy to use (RATIFIED 2026-07-11, D-012 — binding on every screen and every future change)
+
+**Founder directive:** hub owners, staff, and parents must never be confused by a feature, button,
+design, or flow. This section turns that into rules a tester can pass or fail. It binds V1 and
+every change after it; a feature that can't satisfy these rules gets redesigned or cut, not shipped
+with a tooltip.
+
+**Who we design for (the bar is the least technical user):** a hub owner doing admin at 9pm after
+teaching all day; a 19-year-old part-time instructor who got zero training; a grandmother on an
+iPhone SE opening a photo link; a parent with a toddler on one arm. If it needs a manual, it failed.
+
+**The ten rules (testable):**
+1. **One job per screen.** Every screen answers exactly one question or does one job; one primary
+   action, visually dominant. If a screen needs two primary actions, it's two screens.
+2. **The 5-second test.** A first-time user can say what any screen is for within 5 seconds.
+   Tester gate on every new screen.
+3. **The 3-tap rule.** Core daily jobs ≤3 taps from app open: see today's classes, check a child
+   in, post a photo, read an announcement. Audited per release.
+4. **Plain words, one word per concept.** UI vocabulary table below is canonical — the same thing
+   is never called two names, and no term requires explanation. No jargon, no abbreviations.
+5. **Buttons say what they do.** Icon + word label for every primary action (never icon-only);
+   the label is a verb phrase ("Check in", "Send to families" — not "Submit", "OK", "Process").
+6. **One navigation pattern per surface.** /app: bottom tabs, max 4, never changing. /crm:
+   left sidebar. Public pages: single scroll, no nav. No hamburger menus on mobile core flows.
+7. **Defaults work; settings hide.** Everything works out of the box; advanced options live
+   behind "More", never in the main flow. Empty states teach the next step ("Add your first
+   class") instead of showing blank screens.
+8. **Forgiving by design.** Undo over confirm-dialogs where safe; destructive actions state the
+   consequence in plain words ("This removes Mia from Tuesday Art. Her records are kept.");
+   every error says what to do next in human language; Back always works, no dead ends.
+9. **Readable and tappable for everyone.** ≥44px touch targets, ≥16px body text, WCAG AA
+   contrast, works one-handed at 375px, survives Dynamic Type XXL (Linda's iPhone SE).
+10. **If it needs explaining, redesign it.** No onboarding tours, no tooltips-as-crutches, no
+    "?" icons papering over confusing UI. Guided checklists are allowed for setup only.
+
+**Canonical UI vocabulary (DB names in code stay precise; humans see only these):**
+| Concept (schema) | UI says | Never say |
+|---|---|---|
+| hub | your business name (e.g. "Sunny Sprouts") / "My Hub" | tenant, organization, facility |
+| programs | "Activities" | programs, offerings, catalog |
+| class_sessions | "Classes" | sessions, instances, events |
+| attendance / check-in | "Check-in" / "Check out" | attendance capture, logging |
+| child_notes | "Notes" | observations, documentation |
+| booking_requests | "Requests" | leads, conversions, pipeline (parent-facing) |
+| guardians | "Family" / "Parents" | guardians, contacts, users |
+| announcements / photo_moments | "Updates" / "Photos" | broadcasts, media assets, moments |
+| enrollments | "Signed up" / "Roster" | enrollments, registrations (parent-facing) |
+| /crm (internal only) | plain CRM terms are fine for our staff | — |
+
+**Enforcement (so this survives contact with the roadmap):**
+- `app/DESIGN.md` (T-004) embeds these rules + vocabulary as its first section; every UI task's
+  context slice carries it (framework convention already requires this).
+- The tester's design-review checkpoint (ORCHESTRATION §3.a2) adds usability gates: 5-second test
+  per new screen, 3-tap audit, vocabulary grep (banned words list), icon-label check, touch-target
+  check — failures are filed as bugs like any defect (S2 if a core flow confuses).
+- Before public launch: one hallway test — a real non-technical person (a hub owner or parent)
+  completes owner-setup and the staff kiosk flow unaided; observed confusion = bug.
+- Feature-addition rule for ALL future versions: anything added must displace or nest, never
+  crowd — the 4 tabs and the one-job-per-screen rule are permanent budget constraints.
+
+**Key insights:** Simplicity here isn't aesthetics — it's the GTM (P.8's "zero during-class
+burden" and "no training" claims are only true if these rules hold), and it's the moat incumbents
+can't copy without rewrites (iClassPro-class tools are feature-crowded by 15 years of accretion).
+**Risks:** Feature pressure from paying owners will push against the 4-tab/plain-words budget —
+the displace-never-crowd rule is the defense; vocabulary drift as new devs/tasks add screens —
+the grep gate catches it.
+**Open questions:** Spanish parity for the vocabulary table (ES terms chosen with the same
+plain-words bar) — decide at T-004.
+**Next decisions:** None — this is law. T-004 encodes it; the tester enforces it.
 
 ---
 
@@ -1080,6 +1150,8 @@ V1 week 1.
 > CRM (pipeline, hub detail, onboarding checklist, follow-ups — alh-tracker patterns). The
 > parent-app IA below moves to Phase 3 unchanged. Design-language principles and §12.3
 > accessibility bar apply to all three surfaces.
+> **v0.4:** every screen on every surface is additionally bound by the P.9 design law (D-012) —
+> one job per screen, 5-second test, 3-tap rule, canonical plain-words vocabulary, tester-enforced.
 
 Design language: Apple-level restraint — one accent per child (their color), generous whitespace,
 SF/Inter type, no gradients-and-confetti kids-app aesthetic (parents are the users, and they're

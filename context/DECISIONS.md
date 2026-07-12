@@ -55,3 +55,8 @@ Affects: spec P.3/P.8, marketing copy, CRM pipeline fields.
 Choice: Stage 1 (launch): photos in Supabase Storage behind a storage-adapter interface — $0, no card anywhere; ceiling ~8–12 hubs. Stage 2 (at ~5 active hubs or first paying hub, whichever first): founder adds card to enable R2 (free within 10GB/zero egress; set billing alert), flip adapter, migrate media; ceiling → 25–50 hubs. Photos served only via authenticated signed URLs at both stages (toddler media never public).
 Because: R2 free tier requires a payment method (verified 2026-07-11); founder wants zero payment surface now; adapter makes the flip a config change, not a rewrite.
 Affects: ARCHITECTURE.md, T-011, R-003 ceilings.
+
+## D-012: Ease-of-use design law (founder directive) — 2026-07-11
+Choice: PRODUCT_SPEC §P.9 is binding on every screen and every future change: one job per screen, 5-second test, 3-tap rule for daily jobs, canonical plain-words UI vocabulary, icon+label buttons, 4-tab budget (displace-never-crowd), forgiving errors, 44px/16px/AA floor, no tooltip crutches.
+Because: Founder directive — hub owners, staff, and parents must never be confused; simplicity IS the GTM (P.8's zero-training claims) and a moat vs feature-crowded incumbents.
+Affects: app/DESIGN.md (T-004 embeds it), tester design-review gates (T-009 + every UI cycle), all UI tasks permanently.

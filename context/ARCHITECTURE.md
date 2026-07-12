@@ -39,3 +39,8 @@ SMTP_HOST/SMTP_USER/SMTP_PASS (Supabase dashboard config, not app env).
 RLS on every table, schema only via migrations, no committed secrets (INFRA.md non-negotiables) ·
 repository-layer data access (alh pattern) · Playwright e2e incl. live-journey runner pattern ·
 adversarial cross-tenant test is part of DONE for any schema task.
+**UX (D-012, spec §P.9 — binding):** one job per screen · 5-second test · 3-tap rule for daily
+jobs · canonical UI vocabulary (P.9 table; DB names never leak to UI) · icon+label buttons,
+verb-phrase labels · /app = 4 bottom tabs max (displace, never add) · defaults work, settings
+hide · undo over confirm · ≥44px targets, ≥16px text, AA · no tooltips as crutches. Tester files
+violations as bugs (S2 when a core flow confuses).
