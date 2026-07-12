@@ -42,3 +42,14 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 23:40 · c2 · orchestrator · plan · pilot targets + kickoff · done — docs/PILOT_TARGETS.md (10 archetype slots, sourcing playbook, outreach script, CRM seed) + docs/BUILD_KICKOFF_PROMPT.md; T-008 seeds pipeline from it
 
 ## Cycle 2 — closed 2026-07-11 (final): strategy complete at spec v0.4 (D-001..D-013); cycle 3 = V1 build, dispatch-ready
+
+## Cycle 3 — V1 build (dispatched session)
+2026-07-12 09:00 · c3 · orchestrator · intake · boot · done — read INDEX/OBJECTIVE/STATE/PROGRESS/JOURNAL tail/DECISIONS/T-003..T-011; app/ + supabase/ confirmed empty (greenfield); node v20.20/npm/git present, gh + supabase CLI not installed (install on demand)
+2026-07-12 09:05 · c3 · orchestrator · plan · T-003..T-011 · in-progress — spawned planner (opus) to refine 9 draft tasks, no rescope
+2026-07-12 09:20 · c3 · planner · plan · T-003..T-011 · done — refined all 9 task files (Assumes/Unknowns, Context slice, corrected Serves on T-005→crit.6, T-007→crit.3, T-008→crit.5), added T-010/T-011 to T-009 deps, confirmed model scores unchanged, flagged tester must run opus on T-009 (security cycle)
+2026-07-12 09:20 · c3 · planner · decision · D-014 · done — V1 link delivery is email-only ("SMS" = human-pasted link); no paid SMS gateway → DECISIONS.md
+2026-07-12 09:25 · c3 · orchestrator · develop · T-003 · in-progress — spawned developer (sonnet)
+2026-07-12 10:35 · c3 · developer · develop · T-003 · done — app/web scaffolded (React18+TS+Vite+Tailwind+Zustand+Router, 4 route trees, PWA manifest+SW, repository layer); build clean, routes verified, blank-env setup screen verified; committed locally `feature/T-003` (b818075) — GitHub push blocked (403, no write access for llllollki) → context/tasks/T-003.md
+2026-07-12 10:35 · c3 · orchestrator · blocker · github-push · blocked — push to github.com/AmityxRepo/amityx denied; local commits proceeding, will surface with any other blockers
+2026-07-12 10:40 · c3 · orchestrator · develop · T-004 · in-progress — spawned developer (sonnet)
+2026-07-12 12:05 · c3 · developer · develop · T-004 · done — app/DESIGN.md (P.9 verbatim + EN/ES vocab §1, tokens, 9 base components, kitchen-sink route, lint:vocab); warm terracotta/ivory palette chosen (no founder brand on file); AA contrast computed for all token pairs; caught+fixed a dark-mode CRM sidebar inversion bug pre-emptively → context/tasks/T-004.md
