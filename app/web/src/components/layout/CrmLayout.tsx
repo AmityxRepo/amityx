@@ -8,9 +8,9 @@ const NAV = [
 
 export default function CrmLayout() {
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      <aside className="hidden md:flex flex-col w-56 bg-gray-900 text-white fixed inset-y-0 left-0">
-        <div className="px-4 py-5 border-b border-white/10">
+    <div className="min-h-screen flex bg-muted">
+      <aside className="hidden md:flex flex-col w-56 bg-sidebar text-sidebar-foreground fixed inset-y-0 left-0">
+        <div className="px-4 py-5 border-b border-sidebar-foreground/10">
           <span className="font-semibold">Amityx CRM</span>
         </div>
         <nav className="flex-1 px-3 py-3 space-y-1">
@@ -20,8 +20,10 @@ export default function CrmLayout() {
               to={to}
               end={end}
               className={({ isActive }) =>
-                `block rounded-lg px-3 py-2 text-sm font-medium ${
-                  isActive ? 'bg-white/10 text-white' : 'text-gray-300 hover:text-white'
+                `block rounded-md px-3 py-2 text-sm font-medium min-h-[44px] flex items-center ${
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-sidebar-foreground/80 hover:text-sidebar-foreground'
                 }`
               }
             >

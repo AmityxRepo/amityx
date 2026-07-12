@@ -2,8 +2,8 @@
 export default function CrmHome() {
   return (
     <div>
-      <h1 className="text-xl font-semibold text-gray-900">CRM dashboard</h1>
-      <p className="text-xs uppercase tracking-wide text-gray-400 mt-1">
+      <h1 className="text-xl font-semibold text-foreground">CRM dashboard</h1>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mt-1">
         Route stub: <code>/crm</code>
       </p>
     </div>

@@ -14,9 +14,9 @@ const TABS = [
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <header className="h-14 flex items-center px-4 border-b border-gray-100">
-        <span className="font-semibold text-brand-700">Amityx</span>
+    <div className="min-h-screen flex flex-col bg-background">
+      <header className="h-14 flex items-center px-4 border-b border-border">
+        <span className="font-semibold text-primary">Amityx</span>
       </header>
 
       <main className="flex-1 pb-20">
@@ -25,7 +25,7 @@ export default function AppLayout() {
 
       <InstallPrompt />
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 flex">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-card border-t border-border flex">
         {TABS.map(({ to, label, end }) => (
           <NavLink
             key={to}
@@ -33,7 +33,7 @@ export default function AppLayout() {
             end={end}
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-h-[44px] text-xs font-medium ${
-                isActive ? 'text-brand-600' : 'text-gray-400'
+                isActive ? 'text-primary' : 'text-muted-foreground'
               }`
             }
           >

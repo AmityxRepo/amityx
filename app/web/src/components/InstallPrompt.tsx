@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Download } from 'lucide-react'
+import Button from './ui/Button'
 
 /** Minimal shape of the non-standard `beforeinstallprompt` event. */
 interface BeforeInstallPromptEvent extends Event {
@@ -27,16 +29,18 @@ export default function InstallPrompt() {
   if (!deferred) return null
 
   return (
-    <button
-      type="button"
-      onClick={async () => {
-        await deferred.prompt()
-        await deferred.userChoice
-        setDeferred(null)
-      }}
-      className="fixed bottom-20 right-4 z-40 flex items-center gap-2 rounded-full bg-brand-600 text-white px-4 py-2.5 text-sm font-medium shadow-lg min-h-[44px]"
-    >
-      Install Amityx
-    </button>
+    <div className="fixed bottom-20 right-4 z-40">
+      <Button
+        icon={Download}
+        className="shadow-dialog"
+        onClick={async () => {
+          await deferred.prompt()
+          await deferred.userChoice
+          setDeferred(null)
+        }}
+      >
+        Install Amityx
+      </Button>
+    </div>
   )
 }
