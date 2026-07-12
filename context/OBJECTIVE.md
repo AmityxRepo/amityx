@@ -15,9 +15,10 @@ multi-activity venues) pay for; run like AgapayCare: internal CRM + hub signup/a
 
 ## Constraints
 Free tiers only (framework/COST_POLICY.md). Fixed accounts: github.com/AmityxRepo/amityx ·
-vercel.com/amityx · Supabase project jjnzbayatcfkkoyorhes · email help@agapaycare.com (Google
-Workspace SMTP). Stack mirrors C:\Projects\alh-tracker (React+TS+Vite+Tailwind+Supabase on Vercel)
-unless the planner justifies otherwise (D-007). RLS on every table; schema via migrations only.
+Cloudflare (Pages hosting + R2 media, D-008) · Supabase project jjnzbayatcfkkoyorhes (free until
+first paying hub) · email help@agapaycare.com (Workspace SMTP) · Vercel = dev previews only.
+Stack mirrors C:\Projects\alh-tracker (React+TS+Vite+Tailwind+Supabase) per D-007. RLS on every
+table; schema via migrations only.
 
 ## Out of scope
 Payment processing (record/track only) · AI/LLM features (parked, D-004) · parent-facing app

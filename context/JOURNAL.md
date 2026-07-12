@@ -30,3 +30,5 @@ Format: `<YYYY-MM-DD HH:MM> · c<cycle> · <actor> · <type> · <item> · <statu
 2026-07-11 21:10 · c2 · user · plan · GTM · in-progress — founder raises adoption-friction objection; proposes ClassDojo-style penetration
 2026-07-11 21:20 · c2 · orchestrator · design · spec P.8 · done — PROPOSED GTM: free layer (booking page + parent broadcast/photos + kiosk check-in, zero during-class process), owner stays payer; awaiting ratification → docs/PRODUCT_SPEC.md §P.8
 2026-07-11 21:40 · c2 · orchestrator · research · infra pricing · done — verified: Supabase Pro $25/mo, Vercel Pro $20/user/mo (Hobby bans commercial use, enforced); Cloudflare Pages = free commercial alt → R-002 (P.7 watch item closed)
+2026-07-11 22:00 · c2 · user · decision · D-008 · done — Cloudflare account created; production = Pages + R2 media; Supabase stays free until first paying hub
+2026-07-11 22:10 · c2 · orchestrator · research · R-003 · done — capacity model: ~25–50 hubs / ~2.5–7.5k parents on $0 infra (Supabase JSON egress binds); T-003/T-009/ARCHITECTURE/OBJECTIVE updated → research/R-003.md

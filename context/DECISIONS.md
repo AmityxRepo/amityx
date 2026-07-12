@@ -35,3 +35,8 @@ Affects: ARCHITECTURE.md, deployment skill config, env setup.
 Choice: /crm internal CRM (desktop, platform staff) + hub app (mobile-first) + signup; React+TS+Vite+Tailwind+Supabase; parent portal deferred like alh family portal.
 Because: Founder-stated business flow; proven patterns (repository layer, RLS schema, live-journey e2e) reduce risk and build time.
 Affects: ARCHITECTURE.md, T-003..T-009, PRODUCT_SPEC.md §12 IA.
+
+## D-008: Production on Cloudflare (Pages + R2 media); Supabase stays free until first paying customer — 2026-07-11
+Choice: Founder created a Cloudflare account for Amityx. SPA hosts on Cloudflare Pages (free, commercial use allowed); photos/media on R2 (10GB + zero egress fees) instead of Supabase Storage; Vercel demoted to optional dev previews. Supabase Pro ($25/mo) deferred until first paying hub — trigger is backups/no-pause duty of care, not capacity (R-003).
+Because: Vercel Hobby bans commercial use; Supabase 5GB/mo egress would cap photo delivery at ~8–12 hubs — R2 removes both limits at $0.
+Affects: ARCHITECTURE.md, OBJECTIVE constraints, T-003, T-009, R-003.

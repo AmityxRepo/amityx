@@ -3,10 +3,10 @@
 
 ## Stack (D-006, D-007)
 - React 18 + TypeScript + Vite SPA · Tailwind · Zustand · React Router — mirrors alh-tracker for pattern reuse (repository layer, route trees, e2e harness).
-- Supabase: Postgres + RLS, Auth (email OTP/password; custom SMTP), Storage. Project: jjnzbayatcfkkoyorhes.
-- Vercel (team/account "amityx") hosting; GitHub AmityxRepo/amityx; PWA (manifest + service worker) — NO app stores.
+- Supabase: Postgres + RLS, Auth (email OTP/password; custom SMTP). Project: jjnzbayatcfkkoyorhes. FREE tier until first paying hub (D-008); keep-alive ping (GitHub Actions cron) defeats the 7-day pause in quiet weeks.
+- Hosting: **Cloudflare Pages** (free, commercial OK) for the SPA; **Cloudflare R2** for ALL photos/media (10GB free, zero egress — Supabase Storage NOT used for media, D-008/R-003). GitHub AmityxRepo/amityx; PWA — NO app stores. Vercel: optional dev previews only.
 - Email: Google Workspace SMTP via help@agapaycare.com (Supabase custom SMTP → beats free-tier email rate limits).
-- On hold: any LLM/AI service (D-004). Cloudflare not needed until a custom domain exists.
+- On hold: any LLM/AI service (D-004).
 
 ## Structure (app/)
 `app/web` single SPA, three route trees (alh-tracker pattern):
