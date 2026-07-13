@@ -376,6 +376,46 @@ export interface MyHub {
   nextClass: ClassSession | null
 }
 
+// ─── Public hub page RPC (T-010; anon read path, curated) ────
+/** One upcoming class instance on the public page — schedule + live capacity
+ * only, never who's enrolled (see get_public_hub_page migration). */
+export interface PublicHubSession {
+  id: string
+  starts_at: string
+  ends_at: string | null
+  capacity: number | null
+  location: string | null
+  active_count: number
+}
+
+/** One active activity on the public page, with its upcoming sessions. */
+export interface PublicHubProgram {
+  id: string
+  type: ProgramType
+  name: string
+  description: string | null
+  age_min_months: number | null
+  age_max_months: number | null
+  capacity: number | null
+  active_count: number
+  sessions: PublicHubSession[]
+}
+
+/** Public-safe hub fields only — never plan/stripe_customer_id/settings. */
+export interface PublicHubInfo {
+  id: string
+  name: string
+  slug: string
+  city: string | null
+  state: string | null
+  address: string | null
+  timezone: string
+}
+
+export type PublicHubPageResult =
+  | { ok: true; hub: PublicHubInfo; programs: PublicHubProgram[] }
+  | { ok: false; reason: 'not_found' }
+
 // ─── Guardian-link RPC (parent read path) ────────────────────
 export interface GuardianLinkChild {
   id: string

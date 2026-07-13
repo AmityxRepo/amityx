@@ -9,6 +9,7 @@
  * that own each table, alongside their migrations.
  */
 import type {
+  PublicHubPageResult,
   GuardianLinkResult,
   ProvisionHubInput,
   ProvisionHubResult,
@@ -78,6 +79,16 @@ export interface IRepository {
    * are forced by a trigger. Throws on rejection (invalid hub, disabled, rate-limited).
    */
   submitBookingRequest(input: BookingRequestInput): Promise<void>
+
+  /**
+   * Public hub page read (anon path, `/h/{slug}`): curated hub profile + active
+   * activities + upcoming class schedules + live capacity/waitlist counts, via
+   * the get_public_hub_page SECURITY DEFINER RPC (never a table SELECT — anon
+   * has no table-level read grant on hubs/programs/class_sessions). Unknown
+   * slug and a hub with public booking turned off both come back as the same
+   * `{ ok: false, reason: 'not_found' }` — never throws for either case.
+   */
+  getPublicHubPage(slug: string): Promise<PublicHubPageResult>
 
   /**
    * Resolve a guardian-link token (parent read path). Returns the linked

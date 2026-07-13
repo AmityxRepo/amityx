@@ -353,6 +353,40 @@ async function main() {
       child_name: 'x', guardian_name: 'y', guardian_email: 'z@e.com',
     }))
 
+  // ── 5b. get_public_hub_page RPC (T-010) — the ONE curated anon read path
+  //        onto hubs/programs/class_sessions; everything else stays table-blocked
+  //        (proven above). HUB_B's public_booking_enabled was just flipped to
+  //        false by the trigger check above — reused here for the "disabled
+  //        hub == not_found" no-enumeration proof. ──
+  console.log('\n[get_public_hub_page RPC — curated public read]')
+  {
+    const [hubARow, hubBRow] = await Promise.all([
+      svc.from('hubs').select('slug').eq('id', HUB_A).single(),
+      svc.from('hubs').select('slug').eq('id', HUB_B).single(),
+    ])
+    const pageA = await anon.rpc('get_public_hub_page', { p_slug: hubARow.data.slug })
+    if (pageA.data?.ok) {
+      ok('get_public_hub_page(hub A) returns ok:true')
+      const hubKeys = Object.keys(pageA.data.hub)
+      ;['plan', 'stripe_customer_id', 'settings', 'created_by', 'public_booking_enabled'].every((k) => !hubKeys.includes(k))
+        ? ok('public hub payload excludes billing/internal fields')
+        : bad('public hub payload leaked an internal field', JSON.stringify(hubKeys))
+      const prog = pageA.data.programs.find((p) => p.id === A.programId)
+      prog ? ok('hub A public page lists its active program') : bad('hub A program missing from public page')
+    } else {
+      bad('get_public_hub_page(hub A)', JSON.stringify(pageA.data ?? pageA.error))
+    }
+
+    const pageBDisabled = await anon.rpc('get_public_hub_page', { p_slug: hubBRow.data.slug })
+    const pageUnknown = await anon.rpc('get_public_hub_page', { p_slug: `no-such-hub-${uid()}` })
+    pageBDisabled.data?.ok === false && pageBDisabled.data.reason === 'not_found'
+      ? ok('get_public_hub_page(disabled hub B) -> not_found')
+      : bad('disabled hub B page', JSON.stringify(pageBDisabled.data))
+    pageUnknown.data?.ok === false && pageUnknown.data.reason === 'not_found'
+      ? ok('get_public_hub_page(unknown slug) -> not_found (identical shape to disabled hub — no enumeration)')
+      : bad('unknown slug page', JSON.stringify(pageUnknown.data))
+  }
+
   // ── 6. guardian_links RPC (parent read path) ──
   console.log('\n[guardian-link RPC]')
   {

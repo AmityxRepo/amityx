@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { AttendanceWriteResult, BookingRequestInput, IRepository, RosterChild } from './types'
 import type {
+  PublicHubPageResult,
   GuardianLinkResult,
   ProvisionHubInput,
   ProvisionHubResult,
@@ -80,6 +81,12 @@ export class ApiRepository implements IRepository {
       message: input.message ?? null,
     })
     if (error) throw new Error(error.message)
+  }
+
+  async getPublicHubPage(slug: string): Promise<PublicHubPageResult> {
+    const { data, error } = await this.client.rpc('get_public_hub_page', { p_slug: slug })
+    if (error) throw new Error(error.message)
+    return data as PublicHubPageResult
   }
 
   async resolveGuardianLink(token: string): Promise<GuardianLinkResult> {
