@@ -1,24 +1,54 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CalendarDays, Sparkles, Users, LogOut } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card'
+import { CalendarDays, Sparkles, DoorOpen, Tablet } from 'lucide-react'
+import { Card, CardContent } from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
 import { repository } from '../../repository'
-import { useAuth } from '../../auth/AuthProvider'
-import { templateFor } from '../../features/signup/programTemplates'
-import type { MyHub } from '../../repository/schema'
+import type { MyHub, SessionWithProgram, TodaySessions } from '../../repository/schema'
 
 type LoadState = 'loading' | 'ready' | 'nohub' | 'error'
 
-/** /app home — the populated hub dashboard a new owner lands on after signup
- * (T-006). Shows the hub, its seeded activities, and the first class, with the
- * daily jobs one tap away. Reads through the repository (RLS-scoped to the
- * signed-in member's hub). */
+function timeLabel(session: SessionWithProgram): string {
+  const start = new Date(session.starts_at)
+  const startLabel = start.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+  if (!session.ends_at) return startLabel
+  const endLabel = new Date(session.ends_at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+  return `${startLabel} – ${endLabel}`
+}
+
+function SessionCard({ session }: { session: SessionWithProgram }) {
+  return (
+    <Card>
+      <CardContent className="flex flex-col gap-3 p-4">
+        <div>
+          <p className="text-base font-semibold text-foreground">{session.program?.name ?? 'Class'}</p>
+          <p className="text-sm text-muted-foreground">{timeLabel(session)}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Link to={`/app/classes/${session.id}`} className="block">
+            <Button icon={DoorOpen} variant="outline" size="sm" className="w-full">
+              Open class
+            </Button>
+          </Link>
+          <Link to={`/app/classes/${session.id}/kiosk`} className="block">
+            <Button icon={Tablet} size="sm" className="w-full">
+              Launch kiosk
+            </Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+/** /app Today (T-007) — one job: see what’s happening now and what’s next, and get
+ * into a class fast (open the roster, or launch kiosk on the hub’s tablet). Reads
+ * through the repository (RLS-scoped to the signed-in member’s hub). */
 export default function AppHome() {
-  const { signOut } = useAuth()
   const [status, setStatus] = useState<LoadState>('loading')
-  const [data, setData] = useState<MyHub | null>(null)
+  const [hub, setHub] = useState<MyHub | null>(null)
+  const [schedule, setSchedule] = useState<TodaySessions>({ now: [], next: [] })
 
   async function load() {
     if (!repository) {
@@ -27,12 +57,14 @@ export default function AppHome() {
     }
     setStatus('loading')
     try {
-      const hub = await repository.getMyHub()
-      if (!hub) {
+      const myHub = await repository.getMyHub()
+      if (!myHub) {
         setStatus('nohub')
         return
       }
-      setData(hub)
+      setHub(myHub)
+      const today = await repository.listTodaySessions(myHub.hub.id)
+      setSchedule(today)
       setStatus('ready')
     } catch {
       setStatus('error')
@@ -47,7 +79,7 @@ export default function AppHome() {
     return (
       <div className="p-4">
         <p className="text-sm text-muted-foreground" role="status">
-          Loading your hub…
+          Loading today…
         </p>
       </div>
     )
@@ -58,8 +90,8 @@ export default function AppHome() {
       <div className="p-4">
         <EmptyState
           icon={Sparkles}
-          title="Let's set up your hub"
-          description="You're signed in, but you haven't created a hub yet."
+          title="Let’s set up your hub"
+          description="You’re signed in, but you haven’t created a hub yet."
           action={
             <Link to="/signup">
               <Button icon={Sparkles}>Create your hub</Button>
@@ -70,12 +102,12 @@ export default function AppHome() {
     )
   }
 
-  if (status === 'error' || !data) {
+  if (status === 'error' || !hub) {
     return (
       <div className="p-4">
         <EmptyState
           icon={CalendarDays}
-          title="We couldn't load your hub"
+          title="We couldn’t load today’s schedule"
           description="Check your connection and try again."
           action={
             <Button icon={CalendarDays} onClick={load}>
@@ -87,85 +119,46 @@ export default function AppHome() {
     )
   }
 
-  const { hub, role, activities, nextClass } = data
-  const nextClassLabel = nextClass
-    ? new Date(nextClass.starts_at).toLocaleString(undefined, {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-      })
-    : null
+  const hasNothingToday = schedule.now.length === 0 && schedule.next.length === 0
 
   return (
     <div className="p-4 space-y-5">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">{hub.name}</h1>
-          <p className="text-sm text-muted-foreground">
-            {role === 'owner' ? 'You own this hub.' : 'You help run this hub as staff.'}
-          </p>
-        </div>
-        <Button variant="ghost" size="sm" icon={LogOut} onClick={signOut}>
-          Sign out
-        </Button>
+      <header>
+        <h1 className="text-2xl font-semibold text-foreground">{hub.hub.name}</h1>
+        <p className="text-sm text-muted-foreground">Today’s classes</p>
       </header>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Your activities</CardTitle>
-          <CardDescription>{activities.length} set up so far.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {activities.length > 0 ? (
-            <ul className="flex flex-wrap gap-2">
-              {activities.map((a) => (
-                <li key={a.id} className="rounded-pill bg-accent px-3 py-1 text-sm text-accent-foreground">
-                  {templateFor(a.type)?.label ?? a.name}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-muted-foreground">No activities yet.</p>
+      {hasNothingToday ? (
+        <EmptyState
+          icon={CalendarDays}
+          title="No classes today"
+          description="Nothing is scheduled for today at your hub."
+        />
+      ) : (
+        <>
+          {schedule.now.length > 0 && (
+            <section className="space-y-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Happening now</h2>
+              <div className="space-y-3">
+                {schedule.now.map((s) => (
+                  <SessionCard key={s.id} session={s} />
+                ))}
+              </div>
+            </section>
           )}
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Your first class</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {nextClassLabel ? (
-            <p className="text-base text-foreground">{nextClassLabel}</p>
-          ) : (
-            <EmptyState
-              icon={CalendarDays}
-              title="No classes scheduled yet"
-              description="Add a class so families can book a spot."
-              action={
-                <Link to="/app/roster">
-                  <Button icon={CalendarDays}>Add a class</Button>
-                </Link>
-              }
-            />
+          {schedule.next.length > 0 && (
+            <section className="space-y-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Coming up</h2>
+              <div className="space-y-3">
+                {schedule.next.map((s) => (
+                  <SessionCard key={s.id} session={s} />
+                ))}
+              </div>
+            </section>
           )}
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-2 gap-3">
-        <Link to="/app/roster" className="block">
-          <Button icon={Users} variant="outline" className="w-full">
-            See your roster
-          </Button>
-        </Link>
-        <Link to="/app/attendance" className="block">
-          <Button icon={CalendarDays} variant="outline" className="w-full">
-            Check in a child
-          </Button>
-        </Link>
-      </div>
+        </>
+      )}
     </div>
   )
 }

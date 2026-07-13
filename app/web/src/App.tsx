@@ -11,7 +11,13 @@ import Login from './pages/marketing/Login'
 import ResetPassword from './pages/marketing/ResetPassword'
 import AcceptInvite from './pages/marketing/AcceptInvite'
 import AppHome from './pages/app/AppHome'
-import AppStub from './pages/app/AppStub'
+import Roster from './pages/app/Roster'
+import AddChild from './pages/app/AddChild'
+import ChildDetail from './pages/app/ChildDetail'
+import Requests from './pages/app/Requests'
+import More from './pages/app/More'
+import SessionDetail from './pages/app/SessionDetail'
+import Kiosk from './pages/app/Kiosk'
 import CrmHome from './pages/crm/CrmHome'
 import CrmStub from './pages/crm/CrmStub'
 import KitchenSink from './pages/dev/KitchenSink'
@@ -44,14 +50,21 @@ export default function App() {
               {/* Staff invite landing — invitee creates/uses their own account here */}
               <Route path="/accept-invite" element={<AcceptInvite />} />
 
-              {/* Hub surface — mobile-first PWA (owner + staff); signed-in only (T-006) */}
+              {/* Hub surface — mobile-first PWA (owner + staff); signed-in only (T-006).
+                  Nav = 4 bottom tabs max (Today/Roster/Requests/More, P.9 rule 6).
+                  Kiosk mode (T-007) renders full-screen OUTSIDE AppLayout — no header,
+                  no bottom nav — so there's nothing for a parent to navigate away with. */}
               <Route element={<RequireAuth />}>
                 <Route path="/app" element={<AppLayout />}>
                   <Route index element={<AppHome />} />
-                  <Route path="roster" element={<AppStub title="Roster" lands="T-007" />} />
-                  <Route path="attendance" element={<AppStub title="Check-in" lands="T-008" />} />
-                  <Route path="more" element={<AppStub title="More" lands="a later task" />} />
+                  <Route path="roster" element={<Roster />} />
+                  <Route path="roster/new" element={<AddChild />} />
+                  <Route path="roster/:childId" element={<ChildDetail />} />
+                  <Route path="requests" element={<Requests />} />
+                  <Route path="more" element={<More />} />
+                  <Route path="classes/:sessionId" element={<SessionDetail />} />
                 </Route>
+                <Route path="/app/classes/:sessionId/kiosk" element={<Kiosk />} />
               </Route>
 
               {/* Internal CRM — desktop-first, platform staff only; auth guard lands in T-011 */}

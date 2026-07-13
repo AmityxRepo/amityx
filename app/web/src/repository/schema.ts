@@ -107,6 +107,119 @@ export interface BookingRequest {
   created_at: string
 }
 
+// ─── Enrollment / attendance / notes (T-007) ─────────────────
+export interface Enrollment {
+  id: string
+  hub_id: string
+  child_id: string
+  program_id: string | null
+  session_id: string | null
+  status: EnrollmentStatus
+  booking_request_id: string | null
+  created_at: string
+}
+
+export interface Attendance {
+  id: string
+  hub_id: string
+  session_id: string
+  child_id: string
+  checked_in_at: string
+  checked_out_at: string | null
+  method: 'kiosk' | 'staff'
+  checked_in_by: string | null
+}
+
+export interface ChildNote {
+  id: string
+  hub_id: string
+  child_id: string
+  session_id: string | null
+  body: string
+  visible_to_guardian: boolean
+  created_by: string | null
+  created_at: string
+}
+
+/** A class_sessions row joined with its parent program (for Today/session screens).
+ * `capacity` is included on the program so a session with no capacity of its own can
+ * fall back to the program's (features/roster/capacity.mjs consumes whichever the
+ * caller resolves first). */
+export interface SessionWithProgram extends ClassSession {
+  program: Pick<Program, 'id' | 'name' | 'type' | 'capacity'> | null
+}
+
+/** Today's schedule, already split into now/next (features/schedule/today.mjs). */
+export interface TodaySessions {
+  now: SessionWithProgram[]
+  next: SessionWithProgram[]
+}
+
+/** One row on a session's roster: the child, their enrollment, and (if any) today's
+ * attendance record for THIS session. */
+export interface RosterEntry {
+  child: Child
+  enrollment: Enrollment
+  attendance: Attendance | null
+}
+
+/** Full detail for one class_sessions instance: the session+program, capacity
+ * counts, and its roster. */
+export interface SessionDetail {
+  session: SessionWithProgram
+  activeCount: number
+  waitlistCount: number
+  roster: RosterEntry[]
+}
+
+/** A guardian plus the relationship fields from child_guardians, for a child's detail
+ * page. */
+export interface ChildGuardianLink {
+  guardian: Guardian
+  relationship: string | null
+  isPrimary: boolean
+}
+
+/** One enrollment row enriched with its program/session for a child's detail page. */
+export interface ChildEnrollment extends Enrollment {
+  program: Pick<Program, 'id' | 'name' | 'type'> | null
+  session: Pick<ClassSession, 'id' | 'starts_at'> | null
+}
+
+export interface ChildDetail {
+  child: Child
+  guardians: ChildGuardianLink[]
+  enrollments: ChildEnrollment[]
+  attendanceHistory: Array<Attendance & { sessionLabel: string }>
+  notes: ChildNote[]
+}
+
+/** Input to create a child + guardian together and (optionally) enroll them —
+ * the "quick-add at the door" and "Roster > Add a child" flows share this shape. */
+export interface AddChildInput {
+  hubId: string
+  displayName: string
+  birthdate?: string | null
+  photoConsent?: boolean
+  guardianName?: string
+  guardianEmail?: string
+  guardianPhone?: string
+  programId?: string | null
+  sessionId?: string | null
+}
+
+export interface AddChildResult {
+  child: Child
+  enrollment: Enrollment | null
+}
+
+/** Result of accepting a booking request: which enrollment status it landed with, so
+ * the UI can say "waitlisted" honestly instead of implying a guaranteed spot. */
+export interface AcceptBookingResult {
+  child: Child
+  enrollment: Enrollment
+}
+
 // ─── CRM pipeline row (crm_hub_profiles) ─────────────────────
 export interface CrmHubProfile {
   id: string
