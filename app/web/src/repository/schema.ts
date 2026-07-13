@@ -17,7 +17,9 @@ export type BookingStatus = 'new' | 'contacted' | 'enrolled' | 'declined' | 'arc
 export type EnrollmentStatus = 'active' | 'waitlisted' | 'completed' | 'cancelled'
 export type CrmSubscriptionStatus = 'free' | 'trial' | 'active' | 'paused' | 'canceled'
 export type CrmOnboardingStage =
-  | 'signup' | 'activated' | 'first_booking' | 'first_kiosk' | 'paid' | 'churned'
+  // 'prospect' added by T-008 (supabase/migrations/20260712221500_crm_pipeline_extensions.sql)
+  // for outreach-stage businesses tracked before they have an Amityx account.
+  | 'prospect' | 'signup' | 'activated' | 'first_booking' | 'first_kiosk' | 'paid' | 'churned'
 export type CrmPriority = 'low' | 'normal' | 'high'
 export type CrmFollowupStatus = 'open' | 'done' | 'snoozed'
 export type CrmCommType = 'call' | 'email' | 'meeting' | 'note'
@@ -233,8 +235,60 @@ export interface CrmHubProfile {
   trial_end_date: string | null
   next_follow_up_date: string | null
   notes: string | null
+  // archived/archived_at added by T-008 (crm_pipeline_extensions migration) — the
+  // hubs-list archive toggle (reversible: never deletes the row).
+  archived: boolean
+  archived_at: string | null
   created_at: string
   updated_at: string
+}
+
+/** crm_hub_profiles joined with its hub's DISPLAY-only fields (T-008). CRM never
+ * writes hub.name/city/state — those stay owner-controlled per RLS (hubs_owner_write) —
+ * this type only carries them for the pipeline list/detail read views. */
+export interface CrmHubListItem extends CrmHubProfile {
+  hub_name: string
+  hub_slug: string
+  hub_city: string | null
+  hub_state: string | null
+  hub_plan: string
+  hub_created_at: string
+}
+
+// ─── CRM follow-ups + comm log (T-008; tables shipped in T-005) ──
+export interface CrmFollowup {
+  id: string
+  hub_id: string
+  description: string
+  due_date: string
+  status: CrmFollowupStatus
+  assigned_to: string | null
+  created_by: string | null
+  created_at: string
+}
+
+/** A dashboard-wide open follow-up, joined with its hub's name. */
+export interface CrmFollowupWithHub extends CrmFollowup {
+  hub_name: string
+}
+
+export interface CrmCommLogEntry {
+  id: string
+  hub_id: string
+  comm_type: CrmCommType
+  content: string
+  created_by: string | null
+  created_at: string
+}
+
+export interface CrmAdmin {
+  id: string
+  user_id: string
+  name: string
+  email: string
+  role: string
+  is_active: boolean
+  created_at: string
 }
 
 // ─── Staff invite (hub_invites — T-006) ──────────────────────
@@ -289,6 +343,30 @@ export type ResolveInviteResult =
 export type AcceptInviteResult =
   | { ok: true; hub: { id: string; name: string }; role: HubRole; already?: boolean }
   | { ok: false; reason: 'unauthenticated' | 'invalid' | 'accepted' | 'expired' | 'email_mismatch'; expected?: string }
+
+// ─── CRM provisioning RPC contracts (T-008) ──────────────────
+/** "Create hub + invite owner" input — the CRM's own atomic hub creation. Same
+ * activities/firstClass shape as ProvisionHubInput (crm_provision_hub reuses the
+ * identical seeding logic), plus the pipeline fields only the CRM sets upfront. */
+export interface CrmProvisionHubInput {
+  name: string
+  slug: string
+  timezone?: string | null
+  ownerName?: string | null
+  ownerEmail?: string | null
+  priority?: CrmPriority
+  activities: ActivitySeed[]
+  firstClass?: FirstClassSeed | null
+}
+
+export type CrmProvisionHubResult =
+  | { ok: true; hub_id: string; slug: string }
+  | { ok: false; reason: 'unauthenticated' | 'forbidden' | 'invalid_name' | 'invalid_slug' | 'slug_taken' }
+
+/** Mints an OWNER-scoped invite for a freshly crm_provision_hub'd hub (no owner yet). */
+export type CrmInviteOwnerResult =
+  | { ok: true; invite_id: string; token: string; email: string; role: 'owner'; expires_at: string }
+  | { ok: false; reason: 'unauthenticated' | 'forbidden' | 'hub_not_found' | 'already_owned' | 'invalid_email' }
 
 /** The signed-in member's hub + seeded activities/next class — powers the dashboard. */
 export interface MyHub {

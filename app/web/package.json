@@ -10,12 +10,15 @@
     "lint:vocab": "node scripts/lint-vocab.mjs",
     "gen:assets": "node scripts/gen-assets.mjs",
     "seed": "node --experimental-websocket scripts/seed.mjs",
+    "seed:crm": "node --experimental-websocket scripts/crm-seed.mjs",
     "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs",
     "test:signup": "node --test scripts/signup-logic.test.mjs",
     "test:auth": "node --experimental-websocket scripts/auth-smoke.mjs",
     "test:provision": "node --experimental-websocket scripts/provision-smoke.mjs",
     "test:attendance": "node --test scripts/attendance-logic.test.mjs",
-    "test:roster": "node --test scripts/roster-logic.test.mjs"
+    "test:roster": "node --test scripts/roster-logic.test.mjs",
+    "test:crm": "node --test scripts/crm-logic.test.mjs",
+    "test:crm:live": "node --experimental-websocket scripts/crm-smoke.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
