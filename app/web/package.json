@@ -12,7 +12,9 @@
     "seed": "node --experimental-websocket scripts/seed.mjs",
     "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs",
     "test:signup": "node --test scripts/signup-logic.test.mjs",
-    "test:auth": "node --experimental-websocket scripts/auth-smoke.mjs"
+    "test:auth": "node --experimental-websocket scripts/auth-smoke.mjs",
+    "test:attendance": "node --test scripts/attendance-logic.test.mjs",
+    "test:roster": "node --test scripts/roster-logic.test.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
