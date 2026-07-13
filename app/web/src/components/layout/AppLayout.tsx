@@ -1,15 +1,18 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { CalendarDays, Users, Inbox, MoreHorizontal } from 'lucide-react'
 import InstallPrompt from '../InstallPrompt'
 
 /**
  * Mobile-first hub surface shell (owner + staff). D-012/P.9: bottom nav is capped at
- * 4 tabs max — future screens DISPLACE one of these, they never get a 5th added.
+ * 4 tabs max, one navigation pattern, never changing (rule 6) — future screens
+ * DISPLACE one of these, they never get a 5th added. Check-in/kiosk is reached
+ * CONTEXTUALLY from Today -> a class, not its own tab (T-007 spec).
  */
 const TABS = [
-  { to: '/app', label: 'Home', end: true },
-  { to: '/app/roster', label: 'Roster', end: false },
-  { to: '/app/attendance', label: 'Check-in', end: false },
-  { to: '/app/more', label: 'More', end: false },
+  { to: '/app', label: 'Today', end: true, icon: CalendarDays },
+  { to: '/app/roster', label: 'Roster', end: false, icon: Users },
+  { to: '/app/requests', label: 'Requests', end: false, icon: Inbox },
+  { to: '/app/more', label: 'More', end: false, icon: MoreHorizontal },
 ]
 
 export default function AppLayout() {
@@ -26,7 +29,7 @@ export default function AppLayout() {
       <InstallPrompt />
 
       <nav className="fixed bottom-0 left-0 right-0 z-30 bg-card border-t border-border flex">
-        {TABS.map(({ to, label, end }) => (
+        {TABS.map(({ to, label, end, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
@@ -37,6 +40,7 @@ export default function AppLayout() {
               }`
             }
           >
+            <Icon className="h-5 w-5" aria-hidden="true" />
             {label}
           </NavLink>
         ))}
