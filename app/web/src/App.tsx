@@ -7,6 +7,7 @@ import SetupNeeded from './components/SetupNeeded'
 import AppLayout from './components/layout/AppLayout'
 import CrmLayout from './components/layout/CrmLayout'
 import Landing from './pages/marketing/Landing'
+import HubPage from './pages/marketing/HubPage'
 import Signup from './pages/marketing/Signup'
 import Login from './pages/marketing/Login'
 import ResetPassword from './pages/marketing/ResetPassword'
@@ -44,6 +45,10 @@ export default function App() {
             <>
               {/* Public: marketing/landing */}
               <Route path="/" element={<Landing />} />
+
+              {/* Public: per-hub booking/waitlist page (T-010) — single scroll, no
+                  nav (P.9 rule 6), curated anon read via get_public_hub_page RPC. */}
+              <Route path="/h/:slug" element={<HubPage />} />
 
               {/* Public: hub owner self-serve signup + auth (T-006) */}
               <Route path="/signup" element={<Signup />} />

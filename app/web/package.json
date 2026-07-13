@@ -18,7 +18,9 @@
     "test:attendance": "node --test scripts/attendance-logic.test.mjs",
     "test:roster": "node --test scripts/roster-logic.test.mjs",
     "test:crm": "node --test scripts/crm-logic.test.mjs",
-    "test:crm:live": "node --experimental-websocket scripts/crm-smoke.mjs"
+    "test:crm:live": "node --experimental-websocket scripts/crm-smoke.mjs",
+    "test:booking": "node --test scripts/booking-logic.test.mjs",
+    "test:booking:live": "node --experimental-websocket scripts/booking-smoke.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
