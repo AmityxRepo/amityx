@@ -60,7 +60,7 @@ const uid = () => randomBytes(16).toString('hex')
 const TENANT_TABLES = [
   'hubs', 'hub_members', 'programs', 'class_sessions', 'children', 'guardians',
   'child_guardians', 'enrollments', 'booking_requests', 'announcements',
-  'photo_moments', 'attendance', 'child_notes', 'guardian_links',
+  'photo_moments', 'photo_moment_children', 'attendance', 'child_notes', 'guardian_links',
 ]
 const CRM_TABLES = [
   'crm_admins', 'crm_hub_profiles', 'crm_followups', 'crm_comm_log',
@@ -153,7 +153,9 @@ async function seedHub(id, slug, suffix) {
   await insertChecked('announcements', { hub_id: id, title: `Hello ${suffix}`, body: 'x' })
   await insertChecked('child_notes', { hub_id: id, child_id: cYes.id, body: `note ${suffix}` })
   await insertChecked('attendance', { hub_id: id, session_id: s.id, child_id: cYes.id })
-  await insertChecked('photo_moments', { hub_id: id, child_id: cYes.id, storage_path: `p/${suffix}.jpg` })
+  const pm = await insertChecked('photo_moments',
+    { hub_id: id, child_id: cYes.id, storage_path: `${id}/${suffix}.webp` }, { selectSingle: true })
+  await insertChecked('photo_moment_children', { hub_id: id, photo_id: pm.id, child_id: cYes.id })  // T-011 tagging join
   await insertChecked('crm_hub_profiles', { hub_id: id, owner_email: `o${suffix}@amityx.test` })
   await insertChecked('crm_followups', { hub_id: id, description: `call ${suffix}`, due_date: '2026-12-31' })
   await insertChecked('crm_comm_log', { hub_id: id, comm_type: 'note', content: `log ${suffix}` })

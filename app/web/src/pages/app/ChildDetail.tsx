@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Pencil, UserPlus, CalendarPlus, X, Undo2, RefreshCw } from 'lucide-react'
+import { ArrowLeft, Pencil, UserPlus, CalendarPlus, X, Undo2, RefreshCw, Link2, Copy, Check } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
@@ -157,12 +157,15 @@ export default function ChildDetail() {
         <CardContent className="space-y-3">
           {guardians.length === 0 && !addingGuardian && <p className="text-sm text-muted-foreground">No family added yet.</p>}
           {guardians.map((g) => (
-            <div key={g.guardian.id} className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-base text-foreground">{g.guardian.display_name}</p>
-                <p className="text-sm text-muted-foreground">{[g.guardian.email, g.guardian.phone].filter(Boolean).join(' · ') || '—'}</p>
+            <div key={g.guardian.id} className="space-y-2 border-b border-border pb-3 last:border-0 last:pb-0">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-base text-foreground">{g.guardian.display_name}</p>
+                  <p className="text-sm text-muted-foreground">{[g.guardian.email, g.guardian.phone].filter(Boolean).join(' · ') || '—'}</p>
+                </div>
+                {g.isPrimary && <Badge variant="primary">Primary</Badge>}
               </div>
-              {g.isPrimary && <Badge variant="primary">Primary</Badge>}
+              <FamilyLinkButton guardianId={g.guardian.id} childHasConsent={child.photo_consent} />
             </div>
           ))}
           {addingGuardian && (
@@ -324,6 +327,62 @@ function EditChildForm({
         </Button>
       </CardContent>
     </Card>
+  )
+}
+
+/** Mints a scoped, expiring family link for a guardian and copies it to the
+ * clipboard so staff can paste it into their own email/text (D-014 — no system
+ * SMS). The link opens the no-account /g/{token} family view. A child with photo
+ * permission off won't appear in that view, so we warn before minting. */
+function FamilyLinkButton({ guardianId, childHasConsent }: { guardianId: string; childHasConsent: boolean }) {
+  const [link, setLink] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function onCreate() {
+    if (!repository) return
+    setBusy(true)
+    setError(null)
+    try {
+      const result = await repository.issueGuardianLink(guardianId)
+      if (!result.ok) {
+        setError(result.reason === 'forbidden' ? 'Only this hub’s team can create family links.' : 'Could not create a link.')
+        return
+      }
+      const url = `${window.location.origin}/g/${result.token}`
+      setLink(url)
+      try {
+        await navigator.clipboard.writeText(url)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } catch {
+        /* clipboard blocked — link is shown below to copy manually */
+      }
+    } catch {
+      setError('Could not create a link.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      <Button size="sm" variant="outline" icon={copied ? Check : link ? Copy : Link2} disabled={busy} onClick={onCreate}>
+        {busy ? 'Creating…' : copied ? 'Copied' : link ? 'Copy again' : 'Family link'}
+      </Button>
+      {!childHasConsent && (
+        <p className="text-xs text-muted-foreground">
+          Photo sharing is off for this child, so photos won’t show in their family view until you turn it on above.
+        </p>
+      )}
+      {link && <code className="block truncate rounded bg-muted px-2 py-1 text-xs text-muted-foreground">{link}</code>}
+      {error && (
+        <p className="text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
   )
 }
 

@@ -1,0 +1,32 @@
+# Amityx — 30-day rolling media purge (T-011, D-009).
+# Free GitHub Actions cron (same $0 pattern as the T-009 Supabase keep-alive ping):
+# deletes photo bytes + rows past the 30-day window, and stale hub-wide update
+# images. Uses the service-role key from repo Secrets — never committed.
+#
+# Required repository secrets:
+#   SUPABASE_URL                (e.g. https://<ref>.supabase.co)
+#   SUPABASE_SERVICE_ROLE_KEY   (Project settings → API → service_role)
+name: purge-media
+
+on:
+  schedule:
+    - cron: '17 9 * * *' # daily at 09:17 UTC
+  workflow_dispatch: {}
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22' # global WebSocket built in — no --experimental flag
+      - name: Install deps
+        working-directory: app/web
+        run: npm ci
+      - name: Purge expired media
+        working-directory: app/web
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/purge-media.mjs
