@@ -110,7 +110,7 @@ export default function HubStep({ state, update, go }: StepProps) {
         label="Public address"
         htmlFor="hubSlug"
         required
-        hint={`Families will book at ${host}/${slug || 'your-hub'}`}
+        hint={`Families will book at ${host}/h/${slug || 'your-hub'}`}
         error={
           status === 'invalid'
             ? 'Use 3–40 lowercase letters, numbers, and hyphens.'
