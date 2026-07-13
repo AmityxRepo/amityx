@@ -117,31 +117,45 @@ async function makeUser(tag) {
   return { id: data.user.id, email, client }
 }
 
+// Insert + throw loudly on any error, instead of silently swallowing it (a silent
+// failure here previously produced a confusing downstream RLS-suite failure — see T-005 fix).
+async function insertChecked(table, payload, { selectSingle = false } = {}) {
+  let q = svc.from(table).insert(payload)
+  if (selectSingle) q = q.select().single()
+  const r = await q
+  if (r.error) throw new Error(`seedHub: insert into "${table}" failed: ${r.error.message} (code ${r.error.code})`)
+  return r.data
+}
+
 async function seedHub(id, slug, suffix) {
-  await svc.from('hubs').insert({ id, name: `Hub ${suffix}`, slug })
-  const { data: p } = await svc.from('programs')
-    .insert({ hub_id: id, type: 'art', name: `Art ${suffix}` }).select().single()
-  const { data: s } = await svc.from('class_sessions')
-    .insert({ hub_id: id, program_id: p.id, starts_at: new Date(Date.now() + 86400000).toISOString(), capacity: 10 })
-    .select().single()
-  const { data: g } = await svc.from('guardians')
-    .insert({ hub_id: id, display_name: `Guardian ${suffix}`, email: `g${suffix}@amityx.test` }).select().single()
-  const { data: cYes } = await svc.from('children')
-    .insert({ hub_id: id, display_name: `Consented ${suffix}`, photo_consent: true }).select().single()
-  const { data: cNo } = await svc.from('children')
-    .insert({ hub_id: id, display_name: `NoConsent ${suffix}`, photo_consent: false }).select().single()
-  await svc.from('child_guardians').insert([
+  await insertChecked('hubs', { id, name: `Hub ${suffix}`, slug })
+  const p = await insertChecked('programs',
+    { hub_id: id, type: 'art', name: `Art ${suffix}` }, { selectSingle: true })
+  const s = await insertChecked('class_sessions',
+    { hub_id: id, program_id: p.id, starts_at: new Date(Date.now() + 86400000).toISOString(), capacity: 10 },
+    { selectSingle: true })
+  const g = await insertChecked('guardians',
+    { hub_id: id, display_name: `Guardian ${suffix}`, email: `g${suffix}@amityx.test` }, { selectSingle: true })
+  const cYes = await insertChecked('children',
+    { hub_id: id, display_name: `Consented ${suffix}`, photo_consent: true }, { selectSingle: true })
+  const cNo = await insertChecked('children',
+    { hub_id: id, display_name: `NoConsent ${suffix}`, photo_consent: false }, { selectSingle: true })
+  // Both rows must explicitly set is_primary: PostgREST's multi-row insert uses the union of
+  // keys across all objects as the column list, sending an explicit NULL for any row that omits
+  // a key present on another row — bypassing is_primary's NOT NULL DEFAULT false and making
+  // Postgres reject the WHOLE batch (23502). Never omit a field on one row that another row sets.
+  await insertChecked('child_guardians', [
     { hub_id: id, child_id: cYes.id, guardian_id: g.id, is_primary: true },
-    { hub_id: id, child_id: cNo.id, guardian_id: g.id },
+    { hub_id: id, child_id: cNo.id, guardian_id: g.id, is_primary: false },
   ])
-  await svc.from('enrollments').insert({ hub_id: id, child_id: cYes.id, program_id: p.id, status: 'active' })
-  await svc.from('announcements').insert({ hub_id: id, title: `Hello ${suffix}`, body: 'x' })
-  await svc.from('child_notes').insert({ hub_id: id, child_id: cYes.id, body: `note ${suffix}` })
-  await svc.from('attendance').insert({ hub_id: id, session_id: s.id, child_id: cYes.id })
-  await svc.from('photo_moments').insert({ hub_id: id, child_id: cYes.id, storage_path: `p/${suffix}.jpg` })
-  await svc.from('crm_hub_profiles').insert({ hub_id: id, owner_email: `o${suffix}@amityx.test` })
-  await svc.from('crm_followups').insert({ hub_id: id, description: `call ${suffix}`, due_date: '2026-12-31' })
-  await svc.from('crm_comm_log').insert({ hub_id: id, comm_type: 'note', content: `log ${suffix}` })
+  await insertChecked('enrollments', { hub_id: id, child_id: cYes.id, program_id: p.id, status: 'active' })
+  await insertChecked('announcements', { hub_id: id, title: `Hello ${suffix}`, body: 'x' })
+  await insertChecked('child_notes', { hub_id: id, child_id: cYes.id, body: `note ${suffix}` })
+  await insertChecked('attendance', { hub_id: id, session_id: s.id, child_id: cYes.id })
+  await insertChecked('photo_moments', { hub_id: id, child_id: cYes.id, storage_path: `p/${suffix}.jpg` })
+  await insertChecked('crm_hub_profiles', { hub_id: id, owner_email: `o${suffix}@amityx.test` })
+  await insertChecked('crm_followups', { hub_id: id, description: `call ${suffix}`, due_date: '2026-12-31' })
+  await insertChecked('crm_comm_log', { hub_id: id, comm_type: 'note', content: `log ${suffix}` })
   return { programId: p.id, sessionId: s.id, guardianId: g.id, childYes: cYes.id, childNo: cNo.id }
 }
 
