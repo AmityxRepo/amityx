@@ -94,11 +94,12 @@ async function expectWriteOk(label, q) {
 }
 
 // ─── test bodies keyed by the fixtures we build ──────────────
-const created = { userIds: [], tokens: {} }
+const created = { userIds: [], tokens: {}, crmHubIds: [] }
 
 async function cleanup() {
   // Remove hub rows (cascade wipes members/children/etc.) and throwaway auth users.
   await svc.from('hubs').delete().in('id', [HUB_A, HUB_B])
+  if (created.crmHubIds.length) await svc.from('hubs').delete().in('id', created.crmHubIds)
   const { data: list } = await svc.auth.admin.listUsers({ perPage: 1000 })
   for (const u of list?.users ?? []) {
     if (u.email?.endsWith('@amityx.test')) await svc.auth.admin.deleteUser(u.id)
@@ -238,6 +239,79 @@ async function main() {
     admin.client.from('children').insert({ hub_id: HUB_A, display_name: 'admin write' }).select())
   await expectRows('append-only audit recorded the grant',
     admin.client.from('platform_access_audit').select('id').eq('hub_id', HUB_A), 1)
+
+  // ── 4b. CRM provisioning RPCs (T-008): crm_admin only; admin never becomes
+  //        a hub_members row for a hub it provisions ──
+  console.log('\n[CRM provisioning RPCs — crm_provision_hub / crm_invite_hub_owner]')
+  {
+    const slug = `rls-test-crm-${Date.now()}`
+    const ownerEmail = `crmowner+${uid().slice(0, 6)}@amityx.test`
+
+    const nonAdminTry = await ownerA.client.rpc('crm_provision_hub', {
+      p_name: 'Non-admin should not create this', p_slug: `${slug}-denied`,
+    })
+    nonAdminTry.data?.ok === false && nonAdminTry.data.reason === 'forbidden'
+      ? ok('non-admin (ownerA) cannot call crm_provision_hub') : bad('non-admin crm_provision_hub', JSON.stringify(nonAdminTry.data ?? nonAdminTry.error))
+
+    const nonAdminInvite = await ownerA.client.rpc('crm_invite_hub_owner', { p_hub_id: HUB_A, p_email: ownerEmail })
+    nonAdminInvite.data?.ok === false && nonAdminInvite.data.reason === 'forbidden'
+      ? ok('non-admin (ownerA) cannot call crm_invite_hub_owner') : bad('non-admin crm_invite_hub_owner', JSON.stringify(nonAdminInvite.data ?? nonAdminInvite.error))
+
+    const provisioned = await admin.client.rpc('crm_provision_hub', {
+      p_name: 'RLS Test CRM Hub', p_slug: slug, p_owner_name: 'Pat Owner', p_owner_email: ownerEmail,
+      p_activities: [{ type: 'art', name: 'Art' }],
+    })
+    if (provisioned.data?.ok && provisioned.data.hub_id) {
+      ok('admin creates a hub via crm_provision_hub')
+      created.crmHubIds.push(provisioned.data.hub_id)
+      await expectRows('crm_provision_hub seeded the pipeline row as onboarding_stage=prospect',
+        svc.from('crm_hub_profiles').select('id').eq('hub_id', provisioned.data.hub_id).eq('onboarding_stage', 'prospect'), 1)
+      const membersCheck = await svc.from('hub_members').select('id').eq('hub_id', provisioned.data.hub_id);
+      (membersCheck.data?.length ?? 0) === 0
+        ? ok('crm_provision_hub grants the admin NO hub_members row (never inside hub data by default)')
+        : bad('crm_provision_hub membership leak', `found ${membersCheck.data.length} member row(s)`)
+
+      const invited = await admin.client.rpc('crm_invite_hub_owner', { p_hub_id: provisioned.data.hub_id, p_email: ownerEmail })
+      invited.data?.ok && invited.data.role === 'owner'
+        ? ok('admin mints an OWNER-role invite for the fresh hub')
+        : bad('crm_invite_hub_owner (fresh hub)', JSON.stringify(invited.data ?? invited.error))
+
+      const alreadyOwned = await admin.client.rpc('crm_invite_hub_owner', { p_hub_id: HUB_A, p_email: ownerEmail })
+      alreadyOwned.data?.ok === false && alreadyOwned.data.reason === 'already_owned'
+        ? ok('crm_invite_hub_owner refuses a hub that already has an owner (never displaces ownerA)')
+        : bad('crm_invite_hub_owner already_owned guard', JSON.stringify(alreadyOwned.data ?? alreadyOwned.error))
+
+      // Full pipeline walk (acceptance check 2): the invited owner accepts and
+      // becomes a REAL hub_members owner — identical end-state to self-signup.
+      if (invited.data?.token) {
+        const knownPassword = 'Test-owner-' + uid()
+        const { data: ownerUser, error: ownerCreateErr } = await svc.auth.admin.createUser({
+          email: ownerEmail, password: knownPassword, email_confirm: true,
+        })
+        if (!ownerCreateErr) {
+          created.userIds.push(ownerUser.user.id)
+          const inviteeClient = createClient(URL, ANON, { auth: { autoRefreshToken: false, persistSession: false } })
+          const { error: signInErr } = await inviteeClient.auth.signInWithPassword({ email: ownerEmail, password: knownPassword })
+          if (!signInErr) {
+            const accepted = await inviteeClient.rpc('accept_hub_invite', { p_token: invited.data.token })
+            accepted.data?.ok && accepted.data.role === 'owner'
+              ? ok('invited owner accepts and becomes hub_members role=owner (appears in hub app)')
+              : bad('accept_hub_invite (owner)', JSON.stringify(accepted.data ?? accepted.error))
+            const memberRow = await svc.from('hub_members').select('role').eq('hub_id', provisioned.data.hub_id).eq('user_id', ownerUser.user.id).maybeSingle()
+            memberRow.data?.role === 'owner'
+              ? ok('hub_members row for the real owner is role=owner (DATA-identical to self-signup)')
+              : bad('post-accept hub_members role', JSON.stringify(memberRow.data ?? memberRow.error))
+          } else {
+            bad('invitee sign-in for accept_hub_invite check', signInErr.message)
+          }
+        } else {
+          bad('create invitee auth user', ownerCreateErr.message)
+        }
+      }
+    } else {
+      bad('admin crm_provision_hub', JSON.stringify(provisioned.data ?? provisioned.error))
+    }
+  }
 
   // ── 5. Anonymous: booking insert ONLY; no table reads anywhere ──
   console.log('\n[anonymous public role]')

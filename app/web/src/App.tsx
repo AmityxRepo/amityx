@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { isSupabaseConfigured } from './lib/supabase'
 import { AuthProvider } from './auth/AuthProvider'
 import RequireAuth from './auth/RequireAuth'
+import RequireCrmAdmin from './auth/RequireCrmAdmin'
 import SetupNeeded from './components/SetupNeeded'
 import AppLayout from './components/layout/AppLayout'
 import CrmLayout from './components/layout/CrmLayout'
@@ -13,7 +14,8 @@ import AcceptInvite from './pages/marketing/AcceptInvite'
 import AppHome from './pages/app/AppHome'
 import AppStub from './pages/app/AppStub'
 import CrmHome from './pages/crm/CrmHome'
-import CrmStub from './pages/crm/CrmStub'
+import CrmHubs from './pages/crm/CrmHubs'
+import CrmHubDetail from './pages/crm/CrmHubDetail'
 import KitchenSink from './pages/dev/KitchenSink'
 
 export default function App() {
@@ -54,10 +56,16 @@ export default function App() {
                 </Route>
               </Route>
 
-              {/* Internal CRM — desktop-first, platform staff only; auth guard lands in T-011 */}
-              <Route path="/crm" element={<CrmLayout />}>
-                <Route index element={<CrmHome />} />
-                <Route path="hubs" element={<CrmStub title="Hubs pipeline" lands="T-011" />} />
+              {/* Internal CRM — desktop-first, platform staff only. TWO-layer gate
+               * (T-008): RequireCrmAdmin (UX) + RLS on every crm_* table (real
+               * boundary) — hub_owner/hub_staff are denied identically to a
+               * stranger, since neither has a crm_admins row. */}
+              <Route element={<RequireCrmAdmin />}>
+                <Route path="/crm" element={<CrmLayout />}>
+                  <Route index element={<CrmHome />} />
+                  <Route path="hubs" element={<CrmHubs />} />
+                  <Route path="hubs/:hubId" element={<CrmHubDetail />} />
+                </Route>
               </Route>
 
               {/* Catch-all: unknown paths redirect home rather than showing a blank page */}
