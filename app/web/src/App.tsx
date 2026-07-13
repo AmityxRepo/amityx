@@ -8,6 +8,7 @@ import AppLayout from './components/layout/AppLayout'
 import CrmLayout from './components/layout/CrmLayout'
 import Landing from './pages/marketing/Landing'
 import HubPage from './pages/marketing/HubPage'
+import ParentView from './pages/marketing/ParentView'
 import Signup from './pages/marketing/Signup'
 import Login from './pages/marketing/Login'
 import ResetPassword from './pages/marketing/ResetPassword'
@@ -19,6 +20,7 @@ import ChildDetail from './pages/app/ChildDetail'
 import Requests from './pages/app/Requests'
 import More from './pages/app/More'
 import SessionDetail from './pages/app/SessionDetail'
+import Share from './pages/app/Share'
 import Kiosk from './pages/app/Kiosk'
 import CrmHome from './pages/crm/CrmHome'
 import CrmHubs from './pages/crm/CrmHubs'
@@ -50,6 +52,12 @@ export default function App() {
                   nav (P.9 rule 6), curated anon read via get_public_hub_page RPC. */}
               <Route path="/h/:slug" element={<HubPage />} />
 
+              {/* Public: no-account family view (T-011) — a guardian opens their
+                  emailed/texted /g/{token} link (no login, no install) and sees only
+                  THEIR consented child(ren)'s classes, updates, and photos. Scoped +
+                  consent-filtered by get_guardian_feed; photos via signed URLs. */}
+              <Route path="/g/:token" element={<ParentView />} />
+
               {/* Public: hub owner self-serve signup + auth (T-006) */}
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
@@ -69,6 +77,7 @@ export default function App() {
                   <Route path="roster/:childId" element={<ChildDetail />} />
                   <Route path="requests" element={<Requests />} />
                   <Route path="more" element={<More />} />
+                  <Route path="share" element={<Share />} />
                   <Route path="classes/:sessionId" element={<SessionDetail />} />
                 </Route>
                 <Route path="/app/classes/:sessionId/kiosk" element={<Kiosk />} />

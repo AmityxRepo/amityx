@@ -3,6 +3,11 @@ import type { AttendanceWriteResult, BookingRequestInput, IRepository, RosterChi
 import type {
   PublicHubPageResult,
   GuardianLinkResult,
+  IssueGuardianLinkResult,
+  HubPhotoMoment,
+  HubAnnouncement,
+  CreatePhotoMomentResult,
+  GuardianFeedResult,
   ProvisionHubInput,
   ProvisionHubResult,
   CreateInviteResult,
@@ -42,6 +47,8 @@ import type {
 } from './schema'
 import { categorizeSessions } from '../features/schedule/today'
 import { decideEnrollmentStatus } from '../features/roster/capacity'
+import { createMediaBackend, type MediaBackend } from '../features/media/adapter'
+import { compressImage } from '../features/media/compress'
 
 /** Flattens the `hubs(...)` embed PostgREST returns for a crm_hub_profiles join
  * into the display fields CrmHubListItem carries alongside the profile. */
@@ -61,7 +68,10 @@ function toCrmHubListItem(row: Record<string, unknown>): CrmHubListItem {
 
 /** Supabase-backed repository implementation. */
 export class ApiRepository implements IRepository {
-  constructor(private client: SupabaseClient) {}
+  private media: MediaBackend
+  constructor(private client: SupabaseClient) {
+    this.media = createMediaBackend(client)
+  }
 
   async ping(): Promise<boolean> {
     const { error } = await this.client.auth.getSession()
@@ -795,4 +805,173 @@ export class ApiRepository implements IRepository {
     if (error) throw new Error(error.message)
     return data as CrmInviteOwnerResult
   }
+
+  // ─── Parent layer: photo moments + media (T-011) ────────────
+  async issueGuardianLink(guardianId: string, ttlDays = 30): Promise<IssueGuardianLinkResult> {
+    const { data, error } = await this.client.rpc('issue_guardian_link', {
+      p_guardian_id: guardianId,
+      p_ttl_days: ttlDays,
+    })
+    if (error) throw new Error(error.message)
+    return data as IssueGuardianLinkResult
+  }
+
+  /**
+   * Staff capture: compress client-side → upload via the media ADAPTER → tag
+   * consented child(ren) via the create_photo_moment RPC. The RPC is the consent
+   * gate: if any tagged child lacks photo_consent the write is REJECTED and we
+   * roll back the just-uploaded bytes so nothing orphans in storage.
+   */
+  async capturePhotoMoment(input: {
+    hubId: string
+    file: Blob
+    childIds: string[]
+    caption?: string
+    sessionId?: string | null
+  }): Promise<CreatePhotoMomentResult> {
+    const compressed = await compressImage(input.file)
+    const path = await this.media.put(input.hubId, compressed, 'webp')
+    const { data, error } = await this.client.rpc('create_photo_moment', {
+      p_hub_id: input.hubId,
+      p_storage_path: path,
+      p_child_ids: input.childIds,
+      p_caption: input.caption ?? null,
+      p_session_id: input.sessionId ?? null,
+      p_taken_at: null,
+    })
+    if (error) {
+      await this.media.delete(path).catch(() => {})
+      throw new Error(error.message)
+    }
+    const result = data as CreatePhotoMomentResult
+    if (!result.ok) {
+      // Consent rejected (or any business-rule denial): don't leave orphaned bytes.
+      await this.media.delete(path).catch(() => {})
+    }
+    return result
+  }
+
+  async listHubPhotoMoments(hubId: string): Promise<HubPhotoMoment[]> {
+    const { data, error } = await this.client
+      .from('photo_moments')
+      .select('*, photo_moment_children(child:children(id, display_name))')
+      .eq('hub_id', hubId)
+      .order('taken_at', { ascending: false })
+      .limit(60)
+    if (error) throw new Error(error.message)
+    const rows = (data ?? []) as Record<string, unknown>[]
+    return Promise.all(
+      rows.map(async (row) => {
+        const tags = ((row.photo_moment_children ?? []) as Record<string, unknown>[])
+          .map((t) => t.child as PhotoMomentChildTagRow | null)
+          .filter((c): c is PhotoMomentChildTagRow => !!c)
+          .map((c) => ({ id: c.id, display_name: c.display_name }))
+        const signedUrl = await this.media.getSignedUrl(row.storage_path as string)
+        return {
+          id: row.id as string,
+          hub_id: row.hub_id as string,
+          child_id: (row.child_id as string | null) ?? null,
+          session_id: (row.session_id as string | null) ?? null,
+          storage_path: row.storage_path as string,
+          caption: (row.caption as string | null) ?? null,
+          taken_at: row.taken_at as string,
+          expires_at: (row.expires_at as string | null) ?? null,
+          created_at: row.created_at as string,
+          tagged: tags,
+          signedUrl,
+        }
+      }),
+    )
+  }
+
+  async deletePhotoMoment(momentId: string, storagePath: string): Promise<void> {
+    // Bytes first, then the row (photo_moment_children cascades). A failed byte
+    // delete leaves the row so a retry can finish — never a dangling DB pointer.
+    await this.media.delete(storagePath).catch(() => {})
+    const { error } = await this.client.from('photo_moments').delete().eq('id', momentId)
+    if (error) throw new Error(error.message)
+  }
+
+  /**
+   * Post a hub-wide update (announcements row) with an OPTIONAL general image
+   * (flyer / room photo). Hub-wide images carry NO child tags — a photo OF a
+   * specific child must go through capturePhotoMoment (consent-enforced) instead.
+   */
+  async postAnnouncement(input: { hubId: string; title: string; body: string; imageFile?: Blob | null }): Promise<void> {
+    let imagePath: string | null = null
+    if (input.imageFile) {
+      const compressed = await compressImage(input.imageFile)
+      imagePath = await this.media.put(input.hubId, compressed, 'webp')
+    }
+    const { error } = await this.client.from('announcements').insert({
+      hub_id: input.hubId,
+      title: input.title,
+      body: input.body,
+      image_path: imagePath,
+      published_at: new Date().toISOString(),
+    })
+    if (error) {
+      if (imagePath) await this.media.delete(imagePath).catch(() => {})
+      throw new Error(error.message)
+    }
+  }
+
+  async listHubAnnouncements(hubId: string): Promise<HubAnnouncement[]> {
+    const { data, error } = await this.client
+      .from('announcements')
+      .select('*')
+      .eq('hub_id', hubId)
+      .order('created_at', { ascending: false })
+      .limit(60)
+    if (error) throw new Error(error.message)
+    const rows = (data ?? []) as Record<string, unknown>[]
+    return Promise.all(
+      rows.map(async (row) => {
+        const imagePath = (row.image_path as string | null) ?? null
+        const signedUrl = imagePath ? await this.media.getSignedUrl(imagePath) : null
+        return {
+          id: row.id as string,
+          hub_id: row.hub_id as string,
+          title: row.title as string,
+          body: (row.body as string) ?? '',
+          image_path: imagePath,
+          published_at: (row.published_at as string | null) ?? null,
+          read_count: (row.read_count as number) ?? 0,
+          created_at: row.created_at as string,
+          signedUrl,
+        }
+      }),
+    )
+  }
+
+  // ─── Parent read path (anon; token-scoped) ──────────────────
+  async getGuardianFeed(token: string): Promise<GuardianFeedResult> {
+    const { data, error } = await this.client.rpc('get_guardian_feed', { p_token: token })
+    if (error) throw new Error(error.message)
+    return data as GuardianFeedResult
+  }
+
+  /** Turn token-scoped storage paths into short-lived signed URLs via the
+   * guardian-media Edge Function (Postgres can't sign; the bucket is fully private
+   * to anon). Returns a { path: signedUrl } map; missing keys = couldn't sign. */
+  async signGuardianMedia(token: string, paths: string[]): Promise<Record<string, string>> {
+    if (paths.length === 0) return {}
+    const { data, error } = await this.client.functions.invoke('guardian-media', {
+      body: { token, paths },
+    })
+    if (error) return {}
+    const payload = data as { ok?: boolean; urls?: Record<string, string> } | null
+    return payload?.ok ? (payload.urls ?? {}) : {}
+  }
+
+  async markGuardianAnnouncementsRead(token: string, ids: string[]): Promise<void> {
+    if (ids.length === 0) return
+    await this.client.rpc('mark_guardian_announcements_read', { p_token: token, p_ids: ids })
+  }
+}
+
+/** Shape of the child embed PostgREST returns for photo_moment_children. */
+interface PhotoMomentChildTagRow {
+  id: string
+  display_name: string
 }

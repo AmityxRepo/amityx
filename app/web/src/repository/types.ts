@@ -11,6 +11,11 @@
 import type {
   PublicHubPageResult,
   GuardianLinkResult,
+  IssueGuardianLinkResult,
+  HubPhotoMoment,
+  HubAnnouncement,
+  CreatePhotoMomentResult,
+  GuardianFeedResult,
   ProvisionHubInput,
   ProvisionHubResult,
   CreateInviteResult,
@@ -292,4 +297,44 @@ export interface IRepository {
    * that has no owner yet (crm_invite_hub_owner RPC).
    */
   crmInviteHubOwner(hubId: string, email: string): Promise<CrmInviteOwnerResult>
+
+  // ─── Parent layer: photo moments, media, feed (T-011) ───────
+  /** Mint a scoped, expiring, revocable family link token for a guardian (staff
+   * pastes the resulting URL into email/SMS — D-014). Raw token returned once. */
+  issueGuardianLink(guardianId: string, ttlDays?: number): Promise<IssueGuardianLinkResult>
+
+  /** Staff capture: compress → upload via the media adapter → tag consented
+   * child(ren). The write is REJECTED (and the upload rolled back) if any tagged
+   * child lacks photo_consent — inspect `result.ok`/`result.blocked`. */
+  capturePhotoMoment(input: {
+    hubId: string
+    file: Blob
+    childIds: string[]
+    caption?: string
+    sessionId?: string | null
+  }): Promise<CreatePhotoMomentResult>
+
+  /** The hub's recent photo moments (staff view) with tagged children + preview URLs. */
+  listHubPhotoMoments(hubId: string): Promise<HubPhotoMoment[]>
+
+  /** Remove a photo moment: its bytes AND its row (tags cascade). */
+  deletePhotoMoment(momentId: string, storagePath: string): Promise<void>
+
+  /** Post a hub-wide update with an optional general image (no child tags). */
+  postAnnouncement(input: { hubId: string; title: string; body: string; imageFile?: Blob | null }): Promise<void>
+
+  /** The hub's recent updates (staff view) with aggregate read counts. */
+  listHubAnnouncements(hubId: string): Promise<HubAnnouncement[]>
+
+  /** Parent read path: the guardian's consented children + schedule + updates +
+   * photo paths, via the get_guardian_feed RPC (anon, token-scoped). Never throws
+   * for a bad token — inspect `result.ok`. */
+  getGuardianFeed(token: string): Promise<GuardianFeedResult>
+
+  /** Turn token-scoped storage paths into short-lived signed URLs (guardian-media
+   * Edge Function). Returns a { path: signedUrl } map. */
+  signGuardianMedia(token: string, paths: string[]): Promise<Record<string, string>>
+
+  /** Aggregate view count only (increments read_count; no per-recipient rows). */
+  markGuardianAnnouncementsRead(token: string, ids: string[]): Promise<void>
 }

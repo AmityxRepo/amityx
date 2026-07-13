@@ -431,3 +431,99 @@ export type GuardianLinkResult =
       children: GuardianLinkChild[]
     }
   | { ok: false; reason: 'invalid' | 'expired' | 'revoked' }
+
+// ─── Parent layer: photo moments, feed, media (T-011) ────────
+/** Result of issue_guardian_link (T-005 RPC) — the raw token is returned ONCE and
+ * emailed/pasted into the family link; only its hash is stored. */
+export type IssueGuardianLinkResult =
+  | { ok: true; link_id: string; token: string; expires_at: string; hub_id: string; guardian_id: string }
+  | { ok: false; reason: 'unauthenticated' | 'guardian_not_found' | 'forbidden' }
+
+/** A tagged child on a staff-facing photo moment card. */
+export interface PhotoMomentChildTag {
+  id: string
+  display_name: string
+}
+
+/** One photo moment as staff see it (with tagged children + a preview signed URL). */
+export interface HubPhotoMoment {
+  id: string
+  hub_id: string
+  child_id: string | null
+  session_id: string | null
+  storage_path: string
+  caption: string | null
+  taken_at: string
+  expires_at: string | null
+  created_at: string
+  tagged: PhotoMomentChildTag[]
+  /** Short-lived signed preview URL (staff, authenticated). Null if signing failed. */
+  signedUrl: string | null
+}
+
+/** One hub-wide update (announcements row) as staff see it. */
+export interface HubAnnouncement {
+  id: string
+  hub_id: string
+  title: string
+  body: string
+  image_path: string | null
+  published_at: string | null
+  read_count: number
+  created_at: string
+  signedUrl: string | null
+}
+
+export type CreatePhotoMomentResult =
+  | { ok: true; moment_id: string; expires_at: string }
+  | {
+      ok: false
+      reason: 'unauthenticated' | 'forbidden' | 'invalid_path' | 'no_children' | 'consent_required'
+      /** For consent_required: the child name(s) blocking distribution. */
+      blocked?: string
+    }
+
+// ─── get_guardian_feed RPC (the parent read payload) ─────────
+export interface GuardianFeedChild {
+  id: string
+  display_name: string
+  birthdate: string | null
+}
+
+export interface GuardianFeedScheduleItem {
+  session_id: string
+  child_id: string
+  child_name: string
+  program_name: string
+  starts_at: string
+  ends_at: string | null
+  location: string | null
+}
+
+export interface GuardianFeedAnnouncement {
+  id: string
+  title: string
+  body: string
+  published_at: string | null
+  image_path: string | null
+}
+
+export interface GuardianFeedPhoto {
+  id: string
+  caption: string | null
+  taken_at: string
+  storage_path: string
+  is_group: boolean
+}
+
+export type GuardianFeedResult =
+  | {
+      ok: true
+      guardian_id: string
+      hub: { id: string; name: string }
+      children: GuardianFeedChild[]
+      schedule: GuardianFeedScheduleItem[]
+      announcements: GuardianFeedAnnouncement[]
+      photos: GuardianFeedPhoto[]
+    }
+  | { ok: false; reason: 'invalid' | 'expired' | 'revoked' }

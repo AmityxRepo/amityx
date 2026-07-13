@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { LogOut, Copy, Check, UserPlus } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { LogOut, Copy, Check, UserPlus, Camera, ChevronRight } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -73,6 +74,21 @@ export default function More() {
         <h1 className="text-2xl font-semibold text-foreground">More</h1>
         {hub && <p className="text-sm text-muted-foreground">{hub.hub.name}</p>}
       </header>
+
+      <Link to="/app/share" className="block">
+        <Card className="transition-colors hover:bg-muted">
+          <CardContent className="flex items-center gap-3 p-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground">
+              <Camera className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div className="flex-1">
+              <p className="text-base font-medium text-foreground">Photos &amp; updates</p>
+              <p className="text-sm text-muted-foreground">Share a photo, or post an update to families.</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+          </CardContent>
+        </Card>
+      </Link>
 
       {hub?.role === 'owner' && (
         <Card>

@@ -20,7 +20,9 @@
     "test:crm": "node --test scripts/crm-logic.test.mjs",
     "test:crm:live": "node --experimental-websocket scripts/crm-smoke.mjs",
     "test:booking": "node --test scripts/booking-logic.test.mjs",
-    "test:booking:live": "node --experimental-websocket scripts/booking-smoke.mjs"
+    "test:booking:live": "node --experimental-websocket scripts/booking-smoke.mjs",
+    "test:media": "node --experimental-websocket scripts/media-adversarial.mjs",
+    "purge:media": "node --experimental-websocket scripts/purge-media.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
