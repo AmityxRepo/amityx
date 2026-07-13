@@ -10,7 +10,9 @@
     "lint:vocab": "node scripts/lint-vocab.mjs",
     "gen:assets": "node scripts/gen-assets.mjs",
     "seed": "node --experimental-websocket scripts/seed.mjs",
-    "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs"
+    "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs",
+    "test:signup": "node --test scripts/signup-logic.test.mjs",
+    "test:auth": "node --experimental-websocket scripts/auth-smoke.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

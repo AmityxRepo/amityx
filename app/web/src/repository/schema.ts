@@ -107,6 +107,84 @@ export interface BookingRequest {
   created_at: string
 }
 
+// ─── CRM pipeline row (crm_hub_profiles) ─────────────────────
+export interface CrmHubProfile {
+  id: string
+  hub_id: string
+  subscription_status: CrmSubscriptionStatus
+  onboarding_stage: CrmOnboardingStage
+  priority: CrmPriority
+  mrr_cents: number
+  owner_name: string | null
+  owner_email: string | null
+  trial_end_date: string | null
+  next_follow_up_date: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ─── Staff invite (hub_invites — T-006) ──────────────────────
+export interface HubInvite {
+  id: string
+  hub_id: string
+  email: string
+  role: HubRole
+  accepted_at: string | null
+  expires_at: string
+  created_at: string
+}
+
+// ─── Signup provisioning RPC contracts (T-006) ───────────────
+/** One activity to seed at signup (matches provision_hub's p_activities item). */
+export interface ActivitySeed {
+  type: ProgramType
+  name?: string
+  age_min_months?: number | null
+  age_max_months?: number | null
+}
+
+/** Optional first class to seed at signup (provision_hub's p_first_class). */
+export interface FirstClassSeed {
+  program_type: ProgramType
+  starts_at: string
+  ends_at?: string | null
+  capacity?: number | null
+}
+
+export interface ProvisionHubInput {
+  name: string
+  slug: string
+  timezone?: string | null
+  ownerName?: string | null
+  activities: ActivitySeed[]
+  firstClass?: FirstClassSeed | null
+}
+
+export type ProvisionHubResult =
+  | { ok: true; hub_id: string; slug: string }
+  | { ok: false; reason: 'unauthenticated' | 'invalid_name' | 'invalid_slug' | 'slug_taken' }
+
+export type CreateInviteResult =
+  | { ok: true; invite_id: string; token: string; email: string; role: HubRole; expires_at: string }
+  | { ok: false; reason: 'unauthenticated' | 'forbidden' | 'invalid_email' }
+
+export type ResolveInviteResult =
+  | { ok: true; hub: { id: string; name: string }; role: HubRole; email: string }
+  | { ok: false; reason: 'invalid' | 'accepted' | 'expired' }
+
+export type AcceptInviteResult =
+  | { ok: true; hub: { id: string; name: string }; role: HubRole; already?: boolean }
+  | { ok: false; reason: 'unauthenticated' | 'invalid' | 'accepted' | 'expired' | 'email_mismatch'; expected?: string }
+
+/** The signed-in member's hub + seeded activities/next class — powers the dashboard. */
+export interface MyHub {
+  hub: Hub
+  role: HubRole
+  activities: Program[]
+  nextClass: ClassSession | null
+}
+
 // ─── Guardian-link RPC (parent read path) ────────────────────
 export interface GuardianLinkChild {
   id: string

@@ -16,11 +16,26 @@ let _client: SupabaseClient | null | undefined
 /**
  * Returns the Supabase client singleton, or null if env vars are not set.
  * Callers must check `isSupabaseConfigured` (or a null return) before using.
+ *
+ * Auth config (T-006): this is a static SPA (Cloudflare Pages — no server), so
+ * the @supabase/ssr / middleware model does NOT apply; supabase-js is the right
+ * client here (per the T-006 spec: "session persists + auto-refreshes
+ * (supabase-js)"). Sessions live in localStorage and auto-refresh in the
+ * background. `flowType: 'pkce'` is the secure exchange for a public client, and
+ * `detectSessionInUrl` lets an email-confirmation / magic-link redirect complete
+ * the code exchange automatically when opened in the same browser.
  */
 export function getSupabaseClient(): SupabaseClient | null {
   if (!isSupabaseConfigured) return null
   if (_client === undefined) {
-    _client = createClient(url!, anonKey!)
+    _client = createClient(url!, anonKey!, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+      },
+    })
   }
   return _client!
 }
