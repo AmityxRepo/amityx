@@ -1,0 +1,45 @@
+{
+  "name": "amityx-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint:vocab": "node scripts/lint-vocab.mjs",
+    "gen:assets": "node scripts/gen-assets.mjs",
+    "seed": "node --experimental-websocket scripts/seed.mjs",
+    "seed:crm": "node --experimental-websocket scripts/crm-seed.mjs",
+    "test:rls": "node --experimental-websocket scripts/rls-adversarial.mjs",
+    "test:signup": "node --test scripts/signup-logic.test.mjs",
+    "test:auth": "node --experimental-websocket scripts/auth-smoke.mjs",
+    "test:provision": "node --experimental-websocket scripts/provision-smoke.mjs",
+    "test:attendance": "node --test scripts/attendance-logic.test.mjs",
+    "test:roster": "node --test scripts/roster-logic.test.mjs",
+    "test:crm": "node --test scripts/crm-logic.test.mjs",
+    "test:crm:live": "node --experimental-websocket scripts/crm-smoke.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@supabase/supabase-js": "^2.45.4",
+    "lucide-react": "^0.400.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "sharp": "^0.35.3",
+    "svgo": "^4.0.2",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0",
+    "vite-plugin-pwa": "^0.20.5"
+  }
+}

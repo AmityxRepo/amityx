@@ -65,3 +65,8 @@ Affects: app/DESIGN.md (T-004 embeds it), tester design-review gates (T-009 + ev
 Choice: First-10 list = archetype slots + sourcing playbook (docs/PILOT_TARGETS.md; founder fills names from his metro — assumed California, confirm). Founder gave GO; cycle 3 starts in a dispatched session using docs/BUILD_KICKOFF_PROMPT.md.
 Because: Founder deferred the list; real business names must come from his geography/relationships, archetypes and order from R-002.
 Affects: T-008 CRM seed, cycle-3 kickoff, STATE resume cursor.
+
+## D-014: V1 link delivery is email-only; "SMS" = a human-pasted shareable link — 2026-07-12
+Choice: Amityx sends guardian/booking/notification links via email (Workspace SMTP) only; no system-sent SMS in V1. OBJECTIVE's "email/SMS links" is honored by short shareable URLs an owner/parent pastes into their own SMS/WhatsApp — no paid SMS gateway (Twilio etc.) is integrated.
+Because: COST_POLICY / $0 mandate — every transactional-SMS provider is paid; a gateway would breach the "no payment surface" guard (criterion 6). Email is free on our infra.
+Affects: T-010, T-011, OBJECTIVE criteria 4 & 6; revisit a real SMS channel only when funded. [PLANNER-FLAGGED for founder awareness — resolves an implicit gap, not a scope change.]

@@ -45,3 +45,6 @@ Thumbs.db
 
 # Forge working files that shouldn't be shared (keep OBJECTIVE, DECISIONS, ARCHITECTURE)
 context/archive/
+
+# Agent worktrees (ephemeral, not part of the repo)
+.claude/worktrees/

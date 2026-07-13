@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#b54a24" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Amityx — booking, roster, and check-in for toddler & preschool activity hubs." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Amityx" />
+    <meta property="og:description" content="Booking, roster, and check-in for toddler & preschool activity hubs." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>Amityx</title>
+    <script>
+      // Set dark/light before first paint (no flash). Saved choice wins; otherwise
+      // follow the OS preference. Kept tiny and inline on purpose.
+      (function () {
+        var saved = localStorage.getItem('amityx-theme');
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.documentElement.classList.add('dark');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
