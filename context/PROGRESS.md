@@ -13,8 +13,8 @@ Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles 
 - [x] T-008 Internal CRM (/crm) — done 2026-07-12: fully live-verified incl. its own additive migration (crm_provision_hub/crm_invite_hub_owner RPCs)
 - [x] **T-003..T-008 consolidated into `master`** 2026-07-13 (GitHub PR #4 merge, commit 348f1a3) — full regression green post-merge (90/0 RLS, all unit/live suites)
 - [x] T-010 Public booking/waitlist page per hub — done 2026-07-13: curated get_public_hub_page RPC (no anon table SELECT), live-verified (test:booking:live 20/20, rls 95/95)
-- [ ] T-011 Parent layer: announcements, photos, consent, media adapter (opus) — in progress
-- [ ] T-009 E2E suite + production deploy (Pages + keep-alive)
+- [x] T-011 Parent layer: announcements, photos, consent, media adapter (opus) — done 2026-07-13: private bucket + Edge Function signed URLs, reject-at-write consent enforcement, GitHub Actions purge cron; live-verified test:media 28/28
+- [ ] T-009 E2E suite + production deploy (Pages + keep-alive) — next; needs GitHub Actions repo secrets (SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY for T-011's purge cron + keep-alive; CLOUDFLARE_ACCOUNT_ID/API_TOKEN for Pages deploy)
 
 ## Open bugs
 none
@@ -23,7 +23,7 @@ none
 1. ~ Hub self-signup → programs/schedules ≤15 min — code + live-verified (provision_hub 22/22); timed unassisted walkthrough still pending (T-009 hallway test)
 2. ~ Free public booking/waitlist page feeds roster — code + live-verified (T-010); owner email notification on new request not yet wired (in-app inbox works)
 3. ~ Staff PWA zero during-class burden (kiosk + fallback + notes) — code done + unit-verified (T-007); live E2E proof still at T-009
-4. ☐ Parent layer, no install (links, photos w/ consent, 30-day window) — T-011, not started
+4. ~ Parent layer, no install (links, photos w/ consent, 30-day window) — code + live-verified (T-011, 28/28 adversarial); purge cron needs GitHub repo secrets to actually run on schedule (T-009)
 5. ~ Internal CRM pipeline (staff-gated) — code + live-verified (T-008), merged into master
 6. ~ $0 (Supabase free tier, still no card anywhere; Cloudflare Pages creds now on file, R2 NOT used per D-011) · **RLS proof: DONE** (90/0 live) · guards hold (no payments/AI/stores code exists) · Cloudflare Pages production deploy still pending (T-009)
 
