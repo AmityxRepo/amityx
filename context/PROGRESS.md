@@ -7,8 +7,8 @@ Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles 
 ### M3: V1 build — free layer + hub ops + internal CRM — in progress (cycle 3)
 - [x] T-003 Scaffold app/web (Vite SPA + PWA, Cloudflare Pages) — done 2026-07-12, local commit b818075 (GitHub push blocked)
 - [x] T-004 Design system (app/DESIGN.md) — done 2026-07-12, uncommitted (bundled w/ T-005 push once GitHub access resolves)
-- [~] T-005 Tenancy schema + RLS migrations — SQL/tests/seed done, committed `feature/T-005` (5e7611d); DDL apply blocked (needs SUPABASE_ACCESS_TOKEN or DB password)
-- [~] T-006 Auth + hub signup + provisioning — code complete, committed `feature/T-006` (84ce0f5); blocked on Workspace SMTP app password + T-005's DDL-apply (shared blocker)
+- [x] T-005 Tenancy schema + RLS migrations — done 2026-07-12: all 5 migrations applied live (jjnzbayatcfkkoyorhes), seed loaded, adversarial cross-tenant RLS suite 81/0 live (2 hubs/4 principals incl. crm_* + guardian-link consent scoping)
+- [~] T-006 Auth + hub signup + provisioning — code complete, committed `feature/T-006` (84ce0f5); schema now live (T-005 done) — remaining block is only the Workspace SMTP app password
 - [ ] T-007 Hub app core: kiosk check-in, roster, notes, booking inbox
 - [ ] T-008 Internal CRM (/crm)
 - [ ] T-010 Public booking/waitlist page per hub
@@ -24,7 +24,7 @@ none
 3. ☐ Staff PWA zero during-class burden (kiosk + fallback + notes)
 4. ☐ Parent layer, no install (links, photos w/ consent, 30-day window)
 5. ☐ Internal CRM pipeline (staff-gated)
-6. ☐ $0 live (Pages + staged media) · RLS proof · guards (no payments/AI/stores)
+6. ~ $0 (Supabase free tier, still no card anywhere) · **RLS proof: DONE** (81/0 adversarial live) · guards hold (no payments/AI/stores code exists) · Cloudflare Pages production deploy still pending (T-009)
 
 ## Pending decisions / questions for the user
 First-10-hubs list (founder relationships) · "go" for cycle-3 build. (GTM, ICP, pricing, hosting,

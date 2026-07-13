@@ -5,47 +5,47 @@ Cycle: 3 (open)
 Updated: 2026-07-12
 
 ## Resume cursor
-T-003 ✓ (`feature/T-003`, b818075). T-004 ✓ (`feature/T-004`, 913b4ad+57e629c). T-005 code-complete
-(`feature/T-005`, 5e7611d) — DDL apply still blocked (Blocker #1). **T-006 code-complete**
-(`feature/T-006`, 84ce0f5) — full signup wizard + provision_hub RPC + staff invites; live-verified
-against real Supabase Auth (6/6 smoke, 14/14 logic unit tests); blocked only on (a) Blocker #1
-(same DDL-apply gap — provision_hub round-trip unprovable until schema is live) and (b) Blocker #3
-(Workspace SMTP). GitHub push re-tested post repo-creation — still 403 (Blocker #2, unchanged).
-Proceeding to {T-007 ∥ T-008} next (parallel, disjoint route trees, per plan) — both will hit the
-same DDL-apply wall for full live proof but can be built and partially verified same as T-006.
-Sequence: T-003 ✓ → T-004 ✓ → T-005 ~ → T-006 ~ → **{T-007 ∥ T-008} (next)** → T-010 → T-011 → T-009.
+T-003 ✓ (`feature/T-003`, b818075). T-004 ✓ (`feature/T-004`, 913b4ad+57e629c). **T-005 DONE**
+(`feature/T-005`, 5e7611d+dfcb307) — all 5 migrations applied live to project `jjnzbayatcfkkoyorhes`
+via `SUPABASE_ACCESS_TOKEN` (founder-supplied) + `npx supabase db push`; seed loaded; adversarial
+cross-tenant RLS suite **81/0 passing live** (2 hubs, 4 principals, incl. crm_* isolation +
+guardian-link photo-consent scoping) — one test-fixture bug found and fixed along the way (not a
+schema/RLS bug — see JOURNAL). **T-006 code-complete** (`feature/T-006`, 84ce0f5, merged forward
+with the T-005 fix) — full signup wizard + provision_hub RPC + staff invites; live-verified against
+real Supabase Auth. Only remaining T-006 block: Workspace SMTP (#2 below). GitHub push clarified by
+founder: remote is confirmed exactly `https://github.com/AmityxRepo/amityx.git`; the 403 is a
+collaborator-permission issue for account `llllollki`, NOT a missing-repo issue; no GitHub token
+found anywhere in env to work around it — not pushing as `llllollki` per founder instruction
+(Blocker #1). T-007 (hub app core) and T-008 (internal CRM) are running now in parallel (isolated
+worktrees, background) — both depend on T-005+T-006 and can now fully live-verify since the schema
+is live. Sequence: T-003 ✓ → T-004 ✓ → T-005 ✓ → T-006 ~ → **{T-007 ∥ T-008} (in progress)** →
+T-010 → T-011 → T-009.
 
 ## Progress ledger
-Last criterion advanced: 2026-07-12 (c3 — T-006 signup/auth/provisioning code-complete + live-auth-verified)
+Last criterion advanced: 2026-07-12 (c3 — criterion 6's RLS-isolation proof DONE, live; T-005 fully closed)
 Stall count: 0
 
 ## Now
-Starting T-007 (hub app core) and T-008 (internal CRM) in parallel.
+T-007 (hub app core) and T-008 (internal CRM) running in parallel in background worktrees.
 
 ## Next
-- Any one of SUPABASE_ACCESS_TOKEN or the project's DB password → unblocks DDL apply for T-005's
-  migrations (now 5 files incl. T-006's provisioning RPC) AND the live round-trip proof for
-  T-006/T-007/T-008 wherever they need real tables.
-- Workspace SMTP app password (Blocker #3) → unblocks the Workspace-branded email acceptance check.
-- GitHub push access (Blocker #2) → unblocks preview/production deploy checks.
+- A GitHub PAT (or collaborator grant) for write access to AmityxRepo/amityx → unblocks pushing the
+  five local feature branches and all preview/production deploy checks.
+- Workspace SMTP app password (Blocker #2) → unblocks the Workspace-branded email acceptance check.
+- When T-007/T-008 report back: merge forward, bookkeep, continue to T-010 → T-011 → T-009.
 
 ## Blockers
-1. **DDL-apply credential (T-005+T-006, carries into T-007/T-008):** migrations fully written
-   (`supabase/migrations/*.sql`, now 5 files: 4 from T-005 + 1 from T-006's `provision_hub`/
-   `hub_invites`) but applying them needs ONE of: (a) `SUPABASE_ACCESS_TOKEN` — a Supabase
-   **personal access token** from supabase.com/dashboard/account/tokens (different from the
-   anon/service-role keys already supplied), enables `npx supabase link --project-ref
-   jjnzbayatcfkkoyorhes` then `npx supabase db push`; OR (b) the project's **database password**
-   (Project Settings → Database → Connection string) for a direct Postgres connection. Either one
-   and I apply immediately. **Manual fallback:** paste each file in `supabase/migrations/`
-   (filename order) into Supabase Dashboard → SQL Editor, then `supabase/seed.sql` — runbook in
-   `supabase/README.md`.
-2. **GitHub push denied (403)** to github.com/AmityxRepo/amityx for git identity `llllollki` —
-   reconfirmed AFTER the repo was created (not a missing-repo issue). Blocks PR/preview-deploy
-   checks only; four feature branches (`T-003`,`T-004`,`T-005`,`T-006`) committed locally, none
-   pushed. Needs: that GitHub account added as a collaborator with write access, or founder pushes
-   the branches themselves / supplies a PAT with repo write scope.
-3. **Workspace SMTP app password** for help@agapaycare.com, set in Supabase Dashboard → Auth →
+1. **GitHub push** — remote confirmed exactly `https://github.com/AmityxRepo/amityx.git`. Push
+   fails 403 for git identity `llllollki` (a permissions/collaborator issue, reconfirmed after the
+   repo was created — not a missing-repo issue). Checked `app/web/.env.local` and repo root for any
+   `GITHUB_TOKEN`/`GH_TOKEN`/PAT — **none present**. Per founder instruction, NOT pushing as
+   `llllollki`. **Exact ask:** a GitHub PAT (classic or fine-grained) with `repo` write scope for an
+   account that has write access to AmityxRepo/amityx — add it to `app/web/.env.local` as e.g.
+   `GITHUB_TOKEN=...` (or any name, I'll detect it) and I'll configure the push credential and push
+   all five local branches (`feature/T-003` through `feature/T-006` inclusive of the T-005 fix)
+   immediately, without ever committing the token. Alternative: add `llllollki` as a collaborator,
+   or push the branches yourself from an already-authenticated machine.
+2. **Workspace SMTP app password** for help@agapaycare.com, set in Supabase Dashboard → Auth →
    SMTP settings (dashboard config, not app code/env). Without it, Workspace-branded auth email
    delivery is unprovable — confirmed instead that Supabase's own default sender accepts/queues
    the send with no API-level error (a real signUp call to the founder's own email returned
