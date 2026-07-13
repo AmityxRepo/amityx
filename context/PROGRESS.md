@@ -12,8 +12,8 @@ Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles 
 - [x] T-007 Hub app core: kiosk check-in, roster, notes, booking inbox — done 2026-07-12, 44/44 unit tests + build + vocab-lint green
 - [x] T-008 Internal CRM (/crm) — done 2026-07-12: fully live-verified incl. its own additive migration (crm_provision_hub/crm_invite_hub_owner RPCs)
 - [x] **T-003..T-008 consolidated into `master`** 2026-07-13 (GitHub PR #4 merge, commit 348f1a3) — full regression green post-merge (90/0 RLS, all unit/live suites)
-- [ ] T-010 Public booking/waitlist page per hub — in progress
-- [ ] T-011 Parent layer: announcements, photos, consent, media adapter (opus)
+- [x] T-010 Public booking/waitlist page per hub — done 2026-07-13: curated get_public_hub_page RPC (no anon table SELECT), live-verified (test:booking:live 20/20, rls 95/95)
+- [ ] T-011 Parent layer: announcements, photos, consent, media adapter (opus) — in progress
 - [ ] T-009 E2E suite + production deploy (Pages + keep-alive)
 
 ## Open bugs
@@ -21,7 +21,7 @@ none
 
 ## Acceptance criteria status (OBJECTIVE v3)
 1. ~ Hub self-signup → programs/schedules ≤15 min — code + live-verified (provision_hub 22/22); timed unassisted walkthrough still pending (T-009 hallway test)
-2. ☐ Free public booking/waitlist page feeds roster (T-010, in progress)
+2. ~ Free public booking/waitlist page feeds roster — code + live-verified (T-010); owner email notification on new request not yet wired (in-app inbox works)
 3. ~ Staff PWA zero during-class burden (kiosk + fallback + notes) — code done + unit-verified (T-007); live E2E proof still at T-009
 4. ☐ Parent layer, no install (links, photos w/ consent, 30-day window) — T-011, not started
 5. ~ Internal CRM pipeline (staff-gated) — code + live-verified (T-008), merged into master

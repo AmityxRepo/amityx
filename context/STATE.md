@@ -5,26 +5,27 @@ Cycle: 3 (open)
 Updated: 2026-07-12
 
 ## Resume cursor
-**T-003 through T-008 all DONE and consolidated into `master`** (GitHub PR #4 merged, commit
-348f1a3; PRs #1-#3 auto-closed as merged; local master fast-forwarded). Full regression suite green
-on the merged state: build, lint:vocab (41 files), test:rls 90/0, test:signup 14/14, test:auth 6/6,
-test:provision 22/22, test:attendance 17/17, test:roster 13/13, test:crm 14/14, test:crm:live 14/14.
+**T-003 through T-010 all DONE** (T-010 committed `feature/T-010`, tip 500cd80 — includes the
+copy-hint follow-up fix). T-010 added a curated `get_public_hub_page` RPC (anon reads ONLY
+explicitly-allowlisted fields, never a blanket table SELECT) and the public `/h/{slug}` booking
+page; live-verified (test:booking:live 20/20, test:rls 95/95, full regression green). Not yet
+merged into master — do that before starting T-011 (same pattern as T-005→T-008: merge, resolve any
+conflicts, re-verify, push, merge PR). Noted follow-ups (non-blocking): owner email notification on
+new booking request not wired; OG meta is CSR-only; Cloudflare Pages needs an SPA-fallback
+(`_redirects`) for deep routes — carry into T-009's deploy.
 Founder added Cloudflare credentials (`CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, R2 S3-compat
-keys) to `app/web/.env.local` — R2 is NOT used yet (D-011: Supabase Storage stays the V1 media
-backend; R2 is a later config flip), Cloudflare Pages values are for T-009's deploy.
-Now on branch `feature/T-010`, starting the public booking page.
-Sequence: T-003 ✓ → T-004 ✓ → T-005 ✓ → T-006 ✓ → T-007 ✓ → T-008 ✓ → **T-010 (in progress)** →
-T-011 → T-009.
+keys) to `app/web/.env.local` — R2 is NOT used yet (D-011 still staged on Supabase Storage).
+Sequence: T-003 ✓ → ... → T-010 ✓ (merge pending) → **T-011 (next)** → T-009.
 
 ## Progress ledger
-Last criterion advanced: 2026-07-13 (c3 — T-006 finalized live; T-003..T-008 all consolidated into master)
+Last criterion advanced: 2026-07-13 (c3 — T-010 done live; criterion 2 code+live-verified)
 Stall count: 0
 
 ## Now
-Building T-010 (public booking/waitlist page).
+Merging T-010 into master, then starting T-011 (parent layer: guardian access, photo consent, storage adapter).
 
 ## Next
-- T-010 → T-011 (parent layer) → T-009 (e2e + Cloudflare Pages production deploy + keep-alive cron).
+- T-011 (parent layer) → T-009 (e2e + Cloudflare Pages production deploy + keep-alive cron).
 - Workspace SMTP app password (Blocker #1) → unblocks the Workspace-branded email acceptance check;
   per founder instruction, proceed on Supabase's default sender in the meantime, flag as the one
   open acceptance item rather than stalling the build.
