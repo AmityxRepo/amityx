@@ -1,3 +1,12 @@
 # Done ledger
 - T-001 Founding product spec — done 2026-07-11 — docs/PRODUCT_SPEC.md (self-verified vs 6 criteria; R-001 research basis)
 - T-002 Pivot v0.2 provider-first update — done 2026-07-11 — spec v0.2 + OBJECTIVE v2 + ARCHITECTURE + D-003..007 + backlog T-003..T-009 (R-002 basis)
+- T-003 Scaffold app/web (Vite+TS+Tailwind+PWA) — done 2026-07-12 — 4 route trees, repository layer, PWA manifest/SW
+- T-004 Design system — done 2026-07-12 — app/DESIGN.md (P.9 verbatim + EN/ES vocab), tokens, 9 components, lint:vocab gate
+- T-005 Tenancy schema + RLS — done 2026-07-13 — 20 tables, RLS enabled+forced deny-by-default; adversarial suite 100/0 live
+- T-006 Auth + hub signup + provisioning — done 2026-07-13 — signup wizard, provision_hub RPC, staff invites; 22/22 live
+- T-007 Hub app core — done 2026-07-12 — kiosk, offline-idempotent check-in, daily notes, roster, requests inbox; 44/44 unit tests
+- T-008 Internal CRM (/crm) — done 2026-07-12 — two-layer gated pipeline, provisioning reuse, 10-archetype seed
+- T-010 Public booking page — done 2026-07-13 — curated get_public_hub_page RPC, anti-spam, waitlist state
+- T-011 Parent layer — done 2026-07-13 — Edge Function signed media, reject-at-write photo consent, 30-day purge cron
+- T-009 E2E + production deploy — done 2026-07-13 — LIVE https://amityx.pages.dev; Playwright 15/15, RLS 100/100, P.9 gates automated, hallway-test doc written

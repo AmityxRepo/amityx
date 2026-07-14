@@ -239,6 +239,12 @@ async function main() {
   // ── 4. CRM admin: CRM yes; hub data only via explicit grant; never writes hub ──
   console.log('\n[CRM admin + platform support-access]')
   await expectRows('admin reads crm_hub_profiles', admin.client.from('crm_hub_profiles').select('id'), 1)
+  // B-001 fix (hubs_crm_read): an admin reads hub ROOT metadata (name/slug) for the
+  // pipeline, but this must NOT be a backdoor into tenant DATA, and must be admin-ONLY.
+  await expectRows('admin CAN read hub A root metadata (name) — B-001 fix',
+    admin.client.from('hubs').select('id, name, slug').eq('id', HUB_A), 1)
+  await expectBlockedRead('non-admin owner still cannot read another hub root row (policy is admin-only)',
+    ownerA.client.from('hubs').select('*').eq('id', HUB_B))
   await expectBlockedRead('admin has NO default access to hub A children',
     admin.client.from('children').select('*').eq('hub_id', HUB_A))
   // Grant time-boxed support access to hub A (writes an append-only audit row via trigger).
