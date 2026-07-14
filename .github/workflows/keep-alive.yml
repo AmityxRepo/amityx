@@ -1,0 +1,33 @@
+# Amityx — Supabase keep-alive ping (T-009, R-003).
+# Free GitHub Actions cron (same $0 pattern as T-011's purge-media job): Supabase
+# free-tier projects pause after 7 days of API inactivity. Cloudflare Pages serves
+# the SPA as static files, so it does NOT by itself keep Supabase awake. This
+# workflow issues one lightweight anon-key query on a <7-day interval.
+#
+# Required repository secrets:
+#   SUPABASE_URL              (e.g. https://<ref>.supabase.co)
+#   VITE_SUPABASE_ANON_KEY    (Project settings → API → anon public key)
+name: keep-alive
+
+on:
+  schedule:
+    - cron: '43 8 * * 2,5' # twice weekly (Tue + Fri, 08:43 UTC) — well under the 7-day pause window
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22' # global WebSocket built in — no --experimental flag
+      - name: Install deps
+        working-directory: app/web
+        run: npm ci
+      - name: Ping Supabase (keep-alive)
+        working-directory: app/web
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: node scripts/keep-alive.mjs
