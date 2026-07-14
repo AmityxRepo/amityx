@@ -1,0 +1,4 @@
+# Transient Playwright output — regenerate with `npx playwright test`.
+.artifacts/
+.report/
+screens/

@@ -118,6 +118,7 @@ export default function CrmHubs() {
         </div>
         <select
           className={selectClass}
+          aria-label="Filter by subscription status"
           value={subStatus}
           onChange={(e) => setSubStatus(e.target.value as CrmSubscriptionStatus | 'all')}
         >
