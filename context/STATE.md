@@ -5,38 +5,31 @@ Cycle: 3 (open)
 Updated: 2026-07-12
 
 ## Resume cursor
-**T-003 through T-011 all DONE**, T-011 committed `feature/T-011` (30f4bfd), NOT yet merged into
-master — do that before starting T-009. T-011 built: private Storage bucket + a deployed Edge
-Function (`guardian-media`) that mints short-lived signed URLs only after re-validating a
-guardian_link token server-side (deliberately NOT a broad anon-SELECT Storage policy — that would
-let anon enumerate the bucket); reject-at-write consent enforcement (a photo tagging ANY
-non-consented child is refused outright, so the read path never needs runtime filtering); a
-GitHub Actions daily purge cron (script, not pg_cron, so storage bytes and DB rows are removed
-together). Live-verified: test:media 28/28 adversarial (token scoping, write+read consent incl.
-group photos, signed/private-bucket proof, real purge via manipulated `taken_at`, aggregate-only
-announcement counts). Full regression across ALL prior tasks re-run clean (rls 98/98, and every
-other suite). **Two things the purge cron needs before it can actually run on schedule:**
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` as GitHub Actions repo secrets — deferred to T-009 to
-set alongside the Cloudflare/keep-alive secrets in one pass rather than piecemeal.
-Founder added Cloudflare credentials (`CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, R2 S3-compat
-keys) to `app/web/.env.local` — R2 is NOT used yet (D-011 still staged on Supabase Storage).
-Sequence: T-003 ✓ → ... → T-011 ✓ (merge pending) → **T-009 (next, final task)**.
+**LIVE at https://amityx.pages.dev.** T-003 through T-011 all done and merged into master; T-009's
+DEPLOY half also done and merged (PR #7, commit 8dc0de6): Cloudflare Pages production deploy
+verified (real Supabase host baked into the bundle, not a placeholder), `_redirects` SPA-fallback
+fixes T-010's deep-route 404 gap, `keep-alive.yml` + `purge-media.yml` GitHub Actions crons are both
+`active` with repo secrets set (SUPABASE_URL/VITE_SUPABASE_ANON_KEY/SUPABASE_SERVICE_ROLE_KEY via
+libsodium sealed-box API calls, values never printed). Zero open PRs; master fully consolidated.
+**T-009's TESTER half is next**: author + run Playwright e2e (live-journey A owner-signup, B
+CRM→provision→handoff, regression C booking, D guardian-consent), full RLS-isolation re-verification
+against production, and the P.9 usability gates as automated checks (5-second test, 3-tap rule,
+vocabulary grep, 44px/16px/AA sweep) — file + fix any violations, redeploy if a fix touches the
+build. Then write the hallway-test step for the founder.
+Sequence: T-003 ✓ → ... → T-011 ✓ → T-009 deploy ✓ → **T-009 tester half (next, final step of cycle 3)**.
 
 ## Progress ledger
-Last criterion advanced: 2026-07-13 (c3 — T-011 done live; criterion 4 code+live-verified; all 6 objective criteria now have code+live-verification, only goal-level E2E/deploy remains)
+Last criterion advanced: 2026-07-13 (c3 — app is LIVE; criterion 6's deploy half done; 5/6 criteria fully demonstrated, only e2e/usability proof + SMTP remain)
 Stall count: 0
 
 ## Now
-Merging T-011 into master, then starting T-009: Playwright e2e (incl. live-journey pattern), full
-RLS-isolation + P.9 usability gates, GitHub Actions repo secrets, Cloudflare Pages production
-deploy, Supabase keep-alive cron.
+Spawning the tester (opus, per the security-cycle routing rule) for T-009's e2e + adversarial + P.9 usability audit.
 
 ## Next
-- T-009 is the last task in the backlog. On completion: all 6 OBJECTIVE.md criteria demonstrated
-  live at $0/month, hallway-test step documented for the founder — that's cycle-3 DONE.
-- Workspace SMTP app password (Blocker #1) → unblocks the Workspace-branded email acceptance check;
-  per founder instruction, proceed on Supabase's default sender in the meantime, flag as the one
-  open acceptance item rather than stalling the build.
+- On tester completion: merge its e2e suite + any bug fixes into master, write the hallway-test doc,
+  final cycle-3 close-out (STATE/PROGRESS/JOURNAL + DECISIONS if anything new surfaces).
+- Workspace SMTP app password (Blocker #1) → the one acceptance item that stays open regardless;
+  proceeding on Supabase's default sender per founder instruction, not stalling the cycle on it.
 
 ## Blockers
 1. **Workspace SMTP app password** for help@agapaycare.com, set in Supabase Dashboard → Auth →

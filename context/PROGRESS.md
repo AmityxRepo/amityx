@@ -14,7 +14,7 @@ Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles 
 - [x] **T-003..T-008 consolidated into `master`** 2026-07-13 (GitHub PR #4 merge, commit 348f1a3) — full regression green post-merge (90/0 RLS, all unit/live suites)
 - [x] T-010 Public booking/waitlist page per hub — done 2026-07-13: curated get_public_hub_page RPC (no anon table SELECT), live-verified (test:booking:live 20/20, rls 95/95)
 - [x] T-011 Parent layer: announcements, photos, consent, media adapter (opus) — done 2026-07-13: private bucket + Edge Function signed URLs, reject-at-write consent enforcement, GitHub Actions purge cron; live-verified test:media 28/28
-- [ ] T-009 E2E suite + production deploy (Pages + keep-alive) — next; needs GitHub Actions repo secrets (SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY for T-011's purge cron + keep-alive; CLOUDFLARE_ACCOUNT_ID/API_TOKEN for Pages deploy)
+- [~] T-009 E2E suite + production deploy — deploy half DONE: **LIVE at https://amityx.pages.dev**, keep-alive + purge-media crons active with repo secrets set; e2e/P.9-audit/hallway-test half (tester, opus) in progress
 
 ## Open bugs
 none
