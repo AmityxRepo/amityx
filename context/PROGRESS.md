@@ -1,36 +1,42 @@
 # Progress — Amityx (provider-first, pivot v0.2)
-Goal: OBJECTIVE.md (v2) · Build tier: complex · Started: 2026-07-11 · Cycles run: 2 · Full log: JOURNAL.md
+Goal: OBJECTIVE.md (v3) · Build tier: complex · Started: 2026-07-11 · Cycles run: 3 · Full log: JOURNAL.md
 
 ## Milestones
 ### M1: Founding product spec (v0.1, parent-first) — done ✓ 2026-07-11 (T-001; superseded in part by M2)
 ### M2: Pivot v0.2 — provider-first spec + context update — done ✓ 2026-07-11 (T-002, R-002)
-### M3: V1 build — free layer + hub ops + internal CRM — in progress (cycle 3)
-- [x] T-003 Scaffold app/web (Vite SPA + PWA, Cloudflare Pages) — done 2026-07-12, local commit b818075 (GitHub push blocked)
-- [x] T-004 Design system (app/DESIGN.md) — done 2026-07-12, uncommitted (bundled w/ T-005 push once GitHub access resolves)
-- [x] T-005 Tenancy schema + RLS migrations — done 2026-07-12: all 5 migrations applied live (jjnzbayatcfkkoyorhes), seed loaded, adversarial cross-tenant RLS suite 81/0 live (2 hubs/4 principals incl. crm_* + guardian-link consent scoping)
-- [x] T-006 Auth + hub signup + provisioning — done 2026-07-13: live-verified provision_hub round trip (22/22) + staff invites; only Workspace SMTP delivery remains unproven (app password missing)
-- [x] T-007 Hub app core: kiosk check-in, roster, notes, booking inbox — done 2026-07-12, 44/44 unit tests + build + vocab-lint green
-- [x] T-008 Internal CRM (/crm) — done 2026-07-12: fully live-verified incl. its own additive migration (crm_provision_hub/crm_invite_hub_owner RPCs)
-- [x] **T-003..T-008 consolidated into `master`** 2026-07-13 (GitHub PR #4 merge, commit 348f1a3) — full regression green post-merge (90/0 RLS, all unit/live suites)
-- [x] T-010 Public booking/waitlist page per hub — done 2026-07-13: curated get_public_hub_page RPC (no anon table SELECT), live-verified (test:booking:live 20/20, rls 95/95)
-- [x] T-011 Parent layer: announcements, photos, consent, media adapter (opus) — done 2026-07-13: private bucket + Edge Function signed URLs, reject-at-write consent enforcement, GitHub Actions purge cron; live-verified test:media 28/28
-- [~] T-009 E2E suite + production deploy — deploy half DONE: **LIVE at https://amityx.pages.dev**, keep-alive + purge-media crons active with repo secrets set; e2e/P.9-audit/hallway-test half (tester, opus) in progress
+### M3: V1 build — free layer + hub ops + internal CRM — **CLOSED ✓ 2026-07-13**
+All 9 tasks (T-003 scaffold, T-004 design system, T-005 schema+RLS, T-006 auth/signup, T-007 hub
+app, T-008 CRM, T-010 booking page, T-011 parent layer, T-009 e2e+deploy) done, live-verified, and
+merged into `master`. **Live at https://amityx.pages.dev.** Detail per task in tasks/DONE.md +
+JOURNAL.md's cycle-3 section. Final gate (T-009 tester, opus): Playwright e2e 15/15 vs production,
+RLS 100/100 + 6/6 novel adversarial probes, P.9 usability gates automated and passing on every
+customer-facing screen, 2 bugs found+fixed (B-001 S2, B-003 S3), hallway-test protocol written
+(`context/HALLWAY_TEST.md`).
 
 ## Open bugs
-none
+- B-002 (S3, open, non-blocking): `/crm` internal tool — primary-on-muted contrast (4.34:1, needs
+  4.5), 2 sub-44px chevron targets. Deferred to a small design-token polish task; not cycle-blocking
+  (pass bar is zero S1/S2, this is S3 on a staff-only desktop tool).
 
-## Acceptance criteria status (OBJECTIVE v3)
-1. ~ Hub self-signup → programs/schedules ≤15 min — code + live-verified (provision_hub 22/22); timed unassisted walkthrough still pending (T-009 hallway test)
-2. ~ Free public booking/waitlist page feeds roster — code + live-verified (T-010); owner email notification on new request not yet wired (in-app inbox works)
-3. ~ Staff PWA zero during-class burden (kiosk + fallback + notes) — code done + unit-verified (T-007); live E2E proof still at T-009
-4. ~ Parent layer, no install (links, photos w/ consent, 30-day window) — code + live-verified (T-011, 28/28 adversarial); purge cron needs GitHub repo secrets to actually run on schedule (T-009)
-5. ~ Internal CRM pipeline (staff-gated) — code + live-verified (T-008), merged into master
-6. ~ $0 (Supabase free tier, still no card anywhere; Cloudflare Pages creds now on file, R2 NOT used per D-011) · **RLS proof: DONE** (90/0 live) · guards hold (no payments/AI/stores code exists) · Cloudflare Pages production deploy still pending (T-009)
+## Acceptance criteria status (OBJECTIVE v3) — final
+1. ✓ Hub self-signup → programs/schedules ≤15 min — live-verified (provision_hub 22/22, Journey A e2e)
+2. ✓ Free public booking/waitlist page feeds roster — live-verified (T-010, Regression C e2e)
+3. ✓ Staff PWA zero during-class burden (kiosk + fallback + notes) — live-verified (T-007, kiosk e2e)
+4. ✓ Parent layer, no install (links, photos w/ consent, 30-day window) — live-verified (T-011, 28/28 + Regression D e2e)
+5. ✓ Internal CRM pipeline (staff-gated) — live-verified (T-008, Journey B e2e; B-001 RLS gap found+fixed)
+6. ~ $0 live (Cloudflare Pages + Supabase free, no card, R2 staged not used) · RLS proof DONE (100/100 + adversarial) · guards hold (no payments/AI code) · **one open item:** Workspace-branded SMTP email delivery unproven (app password not supplied) — Supabase's default sender covers the functional path meanwhile
 
 ## Pending decisions / questions for the user
-First-10-hubs list (founder relationships) · "go" for cycle-3 build. (GTM, ICP, pricing, hosting,
-media staging: RESOLVED — D-008..D-011.)
+- Google Workspace SMTP app password for help@agapaycare.com (Supabase Dashboard → Auth → SMTP) —
+  the one acceptance item left open; app is otherwise fully live and demonstrated.
+- Run the hallway test (`context/HALLWAY_TEST.md`) before public launch.
+- B-002's contrast fix is a design-token decision worth a small follow-up task.
+- First-10-hubs real business names (founder fills from docs/PILOT_TARGETS.md's sourcing playbook —
+  the 10 archetype placeholder rows are already seeded in the CRM pipeline).
 
 ## Cost ledger
 - c1: fable-5 inline · spawns: 0 · 4 web searches
 - c2: fable-5 inline · spawns: 0 · 2 web searches
+- c3: planner×1(opus) · developer×13(sonnet×9, opus×4) · quick-fix×2(haiku) · tester×1(opus) ·
+  ~15 agent spawns total across T-003..T-011+T-009; heaviest opus use on schema/RLS (T-005),
+  auth (T-006), parent-layer privacy (T-011), and the security-cycle tester (T-009)

@@ -1,41 +1,40 @@
 # State
-Phase: building (cycle 3 — V1 build, in progress)
-Build tier: complex (multi-tenant auth + CRM + PWA)
-Cycle: 3 (open)
-Updated: 2026-07-12
+Phase: delivered (cycle 3 — V1 build, CLOSED)
+Build tier: complex (multi-tenant auth + CRM + PWA + child-media privacy)
+Cycle: 3 (closed 2026-07-13)
+Updated: 2026-07-13
 
 ## Resume cursor
-**LIVE at https://amityx.pages.dev.** T-003 through T-011 all done and merged into master; T-009's
-DEPLOY half also done and merged (PR #7, commit 8dc0de6): Cloudflare Pages production deploy
-verified (real Supabase host baked into the bundle, not a placeholder), `_redirects` SPA-fallback
-fixes T-010's deep-route 404 gap, `keep-alive.yml` + `purge-media.yml` GitHub Actions crons are both
-`active` with repo secrets set (SUPABASE_URL/VITE_SUPABASE_ANON_KEY/SUPABASE_SERVICE_ROLE_KEY via
-libsodium sealed-box API calls, values never printed). Zero open PRs; master fully consolidated.
-**T-009's TESTER half is next**: author + run Playwright e2e (live-journey A owner-signup, B
-CRM→provision→handoff, regression C booking, D guardian-consent), full RLS-isolation re-verification
-against production, and the P.9 usability gates as automated checks (5-second test, 3-tap rule,
-vocabulary grep, 44px/16px/AA sweep) — file + fix any violations, redeploy if a fix touches the
-build. Then write the hallway-test step for the founder.
-Sequence: T-003 ✓ → ... → T-011 ✓ → T-009 deploy ✓ → **T-009 tester half (next, final step of cycle 3)**.
+**Cycle 3 is closed. The app is live at https://amityx.pages.dev.** All 9 tasks (T-003..T-011,
+T-009) done, merged into `master`, deployed. All 6 OBJECTIVE.md v3 criteria demonstrated live and
+adversarially tested; 5 fully green, 1 (criterion 6) has a single open sub-item (Workspace-branded
+SMTP delivery — app password not supplied; Supabase's default sender covers the functional path
+meanwhile). Zero S1/S2 bugs open; one S3 open (B-002, `/crm`-only contrast + touch-target polish,
+non-blocking). If resuming: there is no cycle-4 backlog yet — next steps are founder-driven (see
+PROGRESS.md's "Pending decisions" section) rather than a pre-planned task list. A new cycle should
+start with a fresh planner pass once the founder has real next priorities (e.g. SMTP setup,
+first-10 real hub names, the hallway test, or new feature scope).
 
 ## Progress ledger
-Last criterion advanced: 2026-07-13 (c3 — app is LIVE; criterion 6's deploy half done; 5/6 criteria fully demonstrated, only e2e/usability proof + SMTP remain)
+Last criterion advanced: 2026-07-13 (c3 — all 6 OBJECTIVE.md v3 criteria demonstrated live; cycle closed)
 Stall count: 0
 
 ## Now
-Spawning the tester (opus, per the security-cycle routing rule) for T-009's e2e + adversarial + P.9 usability audit.
+Nothing in flight. Cycle 3 delivered.
 
-## Next
-- On tester completion: merge its e2e suite + any bug fixes into master, write the hallway-test doc,
-  final cycle-3 close-out (STATE/PROGRESS/JOURNAL + DECISIONS if anything new surfaces).
-- Workspace SMTP app password (Blocker #1) → the one acceptance item that stays open regardless;
-  proceeding on Supabase's default sender per founder instruction, not stalling the cycle on it.
+## Next (founder-driven, not pre-planned)
+- Add the Workspace SMTP app password in Supabase Dashboard → Auth → SMTP (closes the last open
+  acceptance sub-item).
+- Run the hallway test (`context/HALLWAY_TEST.md`) before inviting real hubs.
+- Fill real business names into the CRM's 10 seeded archetype rows (docs/PILOT_TARGETS.md playbook).
+- Optional small follow-up: B-002's `/crm` contrast token fix (S3, non-blocking).
+- When ready to scale media beyond ~8-12 hubs: R2 flip per D-011 (adapter already supports it,
+  config-only change) — needs the founder to add a card to Cloudflare for R2's free tier.
 
 ## Blockers
 1. **Workspace SMTP app password** for help@agapaycare.com, set in Supabase Dashboard → Auth →
-   SMTP settings (dashboard config, not app code/env). Without it, Workspace-branded auth email
-   delivery is unprovable — confirmed instead that Supabase's own default sender accepts/queues
-   the send with no API-level error. Founder has said to proceed without it and flag as open.
+   SMTP settings. The only remaining open acceptance item — not blocking anything else; the app is
+   fully live and functional on Supabase's default email sender in the meantime.
 
 ## Drift
-none
+none — all 6 criteria trace cleanly to OBJECTIVE.md v3; no scope drift across the 9-task cycle.
