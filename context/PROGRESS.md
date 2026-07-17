@@ -24,13 +24,17 @@ customer-facing screen, 2 bugs found+fixed (B-001 S2, B-003 S3), hallway-test pr
 3. ✓ Staff PWA zero during-class burden (kiosk + fallback + notes) — live-verified (T-007, kiosk e2e)
 4. ✓ Parent layer, no install (links, photos w/ consent, 30-day window) — live-verified (T-011, 28/28 + Regression D e2e)
 5. ✓ Internal CRM pipeline (staff-gated) — live-verified (T-008, Journey B e2e; B-001 RLS gap found+fixed)
-6. ~ $0 live (Cloudflare Pages + Supabase free, no card, R2 staged not used) · RLS proof DONE (100/100 + adversarial) · guards hold (no payments/AI code) · **one open item:** custom SMTP now configured but confirmed FAILING (Gmail 535 BadCredentials, 0/3 live tests pass, `npm run test:smtp`) — needs a corrected Gmail App Password, not just SMTP setup
+6. ~ $0 live (Cloudflare Pages + Supabase free, no card, R2 staged not used) · RLS proof DONE (100/100 + adversarial) · guards hold (no payments/AI code) · **one open item:** custom SMTP confirmed FAILING across TWO rounds of testing (0/3, then 0/4 after a password update) — identical Gmail `535 BadCredentials` both times (`npm run test:smtp`); needs 2SV/app-password/Workspace-policy investigation, not just re-entering a password
 
 ## Pending decisions / questions for the user
-- SMTP is configured but failing: Gmail rejects the current password with `535 5.7.8 BadCredentials`
-  (confirmed via Supabase's auth logs, 3/3 live attempts). Needs a genuine Gmail **App Password**
-  for help@agapaycare.com (myaccount.google.com/apppasswords, requires 2-Step Verification enabled
-  first) re-entered in Supabase Dashboard → Auth → SMTP Settings — the one acceptance item left
+- SMTP is configured but failing, and SURVIVED a password update unchanged: Gmail rejects the
+  credentials with the identical `535 5.7.8 BadCredentials` both before AND after the founder
+  updated the password (confirmed via Supabase's auth logs, 3/3 then 4/4 failed attempts). Since a
+  password swap alone didn't fix it, check: (1) is 2-Step Verification actually ON for
+  help@agapaycare.com — App Passwords don't exist without it; (2) was a genuine 16-char
+  myaccount.google.com/apppasswords value used, not the regular login password; (3) does the
+  Workspace Admin Console block SMTP relay/app passwords for that account org-wide. Re-enter in
+  Supabase Dashboard → Auth → SMTP Settings and re-run `npm run test:smtp` — the one acceptance item left
   open; app is otherwise fully live and demonstrated.
 - Run the hallway test (`context/HALLWAY_TEST.md`) before public launch.
 - B-002's contrast fix is a design-token decision worth a small follow-up task.
