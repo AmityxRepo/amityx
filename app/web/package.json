@@ -22,6 +22,7 @@
     "test:booking": "node --test scripts/booking-logic.test.mjs",
     "test:booking:live": "node --experimental-websocket scripts/booking-smoke.mjs",
     "test:media": "node --experimental-websocket scripts/media-adversarial.mjs",
+    "test:smtp": "node --experimental-websocket scripts/smtp-smoke.mjs",
     "purge:media": "node --experimental-websocket scripts/purge-media.mjs",
     "keep-alive": "node --experimental-websocket scripts/keep-alive.mjs"
   },
