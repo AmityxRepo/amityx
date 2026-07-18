@@ -21,6 +21,12 @@ noel.adv.castillo+amityxsmtp3@gmail.com for visual verification.
   4.5), 2 sub-44px chevron targets. Deferred to a small design-token polish task; not cycle-blocking
   (pass bar is zero S1/S2, this is S3 on a staff-only desktop tool).
 
+## Closed bugs (post-close, founder-reported)
+- B-004 (S2, verified-closed 2026-07-18): "Forgot your password?" looked broken after a failed
+  sign-in — the reset email genuinely sent, but a stale wrong-password error banner was never
+  cleared and rendered alongside the new success notice. Fixed in `Login.tsx`, regression test
+  added, redeployed and verified live. See `context/bugs/B-004.md`.
+
 ## Acceptance criteria status (OBJECTIVE v3) — final
 1. ✓ Hub self-signup → programs/schedules ≤15 min — live-verified (provision_hub 22/22, Journey A e2e)
 2. ✓ Free public booking/waitlist page feeds roster — live-verified (T-010, Regression C e2e)
