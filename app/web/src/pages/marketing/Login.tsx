@@ -22,6 +22,7 @@ export default function Login() {
   const [errorKind, setErrorKind] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [actionBusy, setActionBusy] = useState(false)
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
@@ -46,25 +47,47 @@ export default function Login() {
 
   async function resendVerification() {
     if (!supabase || !email.trim()) return
+    // Clear any stale sign-in error/notice first — a prior failed sign-in must
+    // never linger alongside this action's own outcome (P.9: forgiving errors,
+    // one clear result at a time, never two contradictory messages on screen).
+    setError(null)
+    setErrorKind(null)
     setNotice(null)
-    const { error: err } = await supabase.auth.resend({
-      type: 'signup',
-      email: email.trim(),
-      options: { emailRedirectTo: `${window.location.origin}/signup?verified=1` },
-    })
-    setNotice(err ? mapAuthError(err).message : 'Verification email sent. Open the link, then sign in.')
+    setActionBusy(true)
+    try {
+      const { error: err } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.trim(),
+        options: { emailRedirectTo: `${window.location.origin}/signup?verified=1` },
+      })
+      setNotice(err ? mapAuthError(err).message : 'Verification email sent. Open the link, then sign in.')
+    } finally {
+      setActionBusy(false)
+    }
   }
 
   async function forgotPassword() {
     if (!supabase || !email.trim()) {
+      setError(null)
+      setErrorKind(null)
       setNotice('Enter your email above first, then choose "Forgot your password?".')
       return
     }
+    // Same as above: clear any stale sign-in error before showing this action's
+    // own result, so a prior "wrong password" banner can never sit on screen
+    // next to (or instead of) "check your email" and look like nothing happened.
+    setError(null)
+    setErrorKind(null)
     setNotice(null)
-    const { error: err } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/reset-password`,
-    })
-    setNotice(err ? mapAuthError(err).message : 'Check your email for a link to set a new password.')
+    setActionBusy(true)
+    try {
+      const { error: err } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+      })
+      setNotice(err ? mapAuthError(err).message : 'Check your email for a link to set a new password.')
+    } finally {
+      setActionBusy(false)
+    }
   }
 
   return (
@@ -99,18 +122,23 @@ export default function Login() {
                 <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
                   <p>{error}</p>
                   {errorKind === 'email_not_confirmed' && (
-                    <button type="button" className="mt-1 font-medium underline" onClick={resendVerification}>
+                    <button type="button" className="mt-1 font-medium underline" onClick={resendVerification} disabled={actionBusy}>
                       Resend verification email
                     </button>
                   )}
                 </div>
               )}
 
-              <Button type="submit" disabled={busy}>
+              <Button type="submit" disabled={busy || actionBusy}>
                 {busy ? 'Signing in…' : 'Sign in'}
               </Button>
-              <button type="button" className="w-full text-center text-sm text-primary font-medium" onClick={forgotPassword}>
-                Forgot your password?
+              <button
+                type="button"
+                className="w-full text-center text-sm text-primary font-medium disabled:opacity-60"
+                onClick={forgotPassword}
+                disabled={busy || actionBusy}
+              >
+                {actionBusy ? 'Sending…' : 'Forgot your password?'}
               </button>
             </form>
           </CardContent>
