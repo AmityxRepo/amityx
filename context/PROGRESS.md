@@ -27,16 +27,18 @@ noel.adv.castillo+amityxsmtp3@gmail.com for visual verification.
 3. ✓ Staff PWA zero during-class burden (kiosk + fallback + notes) — live-verified (T-007, kiosk e2e)
 4. ✓ Parent layer, no install (links, photos w/ consent, 30-day window) — live-verified (T-011, 28/28 + Regression D e2e)
 5. ✓ Internal CRM pipeline (staff-gated) — live-verified (T-008, Journey B e2e; B-001 RLS gap found+fixed)
-6. ✓ $0 live (Cloudflare Pages + Supabase free, no card, R2 staged not used) · RLS proof DONE (100/100 + adversarial) · guards hold (no payments/AI code) · **SMTP now confirmed working**: `npm run test:smtp` 3/3 pass (2026-07-18, after the founder re-saved SMTP username+password), clean in Supabase's auth logs, real confirmation email sent to noel.adv.castillo+amityxsmtp3@gmail.com for the founder's visual delivery check
+6. ✓ $0 live (Cloudflare Pages + Supabase free, no card, R2 staged not used) · RLS proof DONE (100/100 + adversarial) · guards hold (no payments/AI code) · **SMTP send + confirmation redirect both fixed and verified** (2026-07-18): `npm run test:smtp` 3/3 pass; Supabase Auth's project-wide Site URL (stuck at the scaffold default `localhost:3000`, unrelated to SMTP) fixed via Management API to `https://amityx.pages.dev`; `Login.tsx` resend path fixed for redirect consistency; redeployed to Cloudflare Pages; verified via `admin.generateLink` that both explicit-redirect and Site-URL-fallback paths resolve to production, not localhost; real confirmation email sent to noel.adv.castillo+amityxsmtp4@gmail.com for the founder's final click-through check
 
 ## Pending decisions / questions for the user
-- **Check your inbox**: a real confirmation email was sent to
-  noel.adv.castillo+amityxsmtp3@gmail.com (delivers to noel.adv.castillo@gmail.com via Gmail's
-  +tag aliasing) — check there (and Spam) to visually confirm delivery. The send path itself is
-  proven at the API/log level (3/3 pass, clean in Supabase's auth logs); this is just the
-  human-eyeball step. (History: it took re-saving BOTH the SMTP username AND password to fix —
-  updating just the password twice hadn't worked, suggesting the username field was the actual
-  problem earlier on.)
+- **Check your inbox and click the link**: a real confirmation email was sent to
+  noel.adv.castillo+amityxsmtp4@gmail.com (delivers to noel.adv.castillo@gmail.com via Gmail's
+  +tag aliasing) — check there (and Spam), and confirm the link now lands on
+  https://amityx.pages.dev (not localhost) and logs you into the live app. Both the SMTP send and
+  the redirect destination are proven at the API/log level; this is the last human-eyeball step.
+  (History: two separate bugs stacked — a wrong SMTP username/password combo blocked sending at
+  all, fixed by re-saving both fields; then Supabase's project-wide Site URL, stuck at its scaffold
+  default since project creation and unrelated to SMTP, sent valid links to localhost — fixed via
+  the Management API.)
 - Run the hallway test (`context/HALLWAY_TEST.md`) before public launch.
 - B-002's contrast fix is a design-token decision worth a small follow-up task.
 - First-10-hubs real business names (founder fills from docs/PILOT_TARGETS.md's sourcing playbook —
