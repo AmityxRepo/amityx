@@ -47,7 +47,11 @@ export default function Login() {
   async function resendVerification() {
     if (!supabase || !email.trim()) return
     setNotice(null)
-    const { error: err } = await supabase.auth.resend({ type: 'signup', email: email.trim() })
+    const { error: err } = await supabase.auth.resend({
+      type: 'signup',
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/signup?verified=1` },
+    })
     setNotice(err ? mapAuthError(err).message : 'Verification email sent. Open the link, then sign in.')
   }
 
